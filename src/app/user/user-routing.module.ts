@@ -19,7 +19,12 @@ const routes: Routes = [
   {
     path: 'register',
     loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'forgot',
+    loadChildren: () => import('./forgot-page/forgot-page.module').then( m => m.ForgotPagePageModule)
   }
+
 ];
 
 @NgModule({

@@ -8,6 +8,7 @@ import { FirebaseService } from '../services/firebase.service';
 })
 export class UserService {
 
+  public userData: any;
   constructor(
     private http: HttpClient,
     private firebaseService : FirebaseService
@@ -26,15 +27,15 @@ export class UserService {
    * @returns 
    */
   public sendResetPasswordLink = (resetLinkParam) => {
-    return this.http.post('https://reqres.in/api/send', resetLinkParam);
+    return this.firebaseService.checkUserData("User", resetLinkParam);
   }
 
-    /**
-   * This method for update password API(reset)
-   * @param resetLinkParam 
-   * @returns 
-   */
-     public resetPassword = (resetLinkParam) => {
-      return this.http.post('https://reqres.in/api/reset', resetLinkParam);
-    }
+  /**
+ * This method for send reset link API
+ * @param userData 
+ * @returns 
+ */
+  public updatePassword = (userData: any) => {
+    return this.firebaseService.set("User", userData.email, userData);
+  }
 }

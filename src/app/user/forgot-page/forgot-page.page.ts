@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserService } from '../user.service';
 
 @Component({
@@ -9,9 +10,8 @@ import { UserService } from '../user.service';
 })
 export class ForgotPagePage implements OnInit {
   public isLoading: Boolean = false;
-  public isSent: Boolean = false;
-  public submitDisabled: Boolean = false;
-  constructor(public userService: UserService) { }
+  public errMessage: any;
+  constructor(public userService: UserService, private router: Router) { }
 
   ngOnInit() {
   }
@@ -21,19 +21,19 @@ export class ForgotPagePage implements OnInit {
     if (!form.valid) {
       return;
     }
-    const resetPasswordParam = { 'email': form.value.email };
-    this.isSent = true;
-    this.isLoading = false;
-    this.submitDisabled = true;
-    setTimeout(() => {
-      this.submitDisabled = false;
-    }, 10000);
-    this.userService.sendResetPasswordLink(resetPasswordParam).subscribe(
+    this.userService.sendResetPasswordLink(form.value.email).subscribe(
       response => {
-        this.isLoading = false;
-      },
-      error => {
-        this.isLoading = false;
+        if (response && response.length > 0) {
+          this.userService.userData = response[0];
+          this.isLoading = false;
+          this.router.navigateByUrl('/user/forgot/reset');
+        } else {
+          this.errMessage = 'Invalid Account.Try with other email';
+          setTimeout(() => {
+            this.errMessage = '';
+          }, 5000);
+          this.isLoading = false;
+        }
       }
     );
   }

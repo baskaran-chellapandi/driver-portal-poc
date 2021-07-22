@@ -32,16 +32,15 @@
       </ion-row>
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
-          <ion-button type="submit" color="primary" expand="block" [disabled]="!form.valid || submitDisabled">
-            {{isSent ? 'Re-Send' : 'Send'}}
+          <ion-button type="submit" color="primary" expand="block" [disabled]="!form.valid">
+            Send
             <ion-spinner name="bubbles" *ngIf="isLoading"></ion-spinner>
           </ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>
   </form>
-  <small>
-    Please provide the username or email address that you used when you signed
-    up for your Evernote account. <a *ngIf="isSent" routerLink='/user/forgot/reset'>Reset Link</a>
-  </small>
+  <ion-label color="danger" *ngIf="errMessage">
+    {{errMessage}}
+  </ion-label>
 </ion-content>

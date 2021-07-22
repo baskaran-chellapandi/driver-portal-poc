@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-
+import { FirebaseService } from './services/firebase.service'
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,7 +21,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
     AngularFirestoreModule,
     HttpClientModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },FirebaseService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

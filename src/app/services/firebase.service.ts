@@ -53,6 +53,20 @@ export class FirebaseService {
   getOne(collection,id){
     return this.firestore.collection('/'+collection+'/').doc(id)
     
-  }      
+  } 
+  
+  /* 
+  * Function to validate login
+  * Parrams: collection - mention the collection name
+  * Parrams: Email - User email
+  * Parrams: Password - User password 
+  */
+  validateLoginInfo(collection,email,password){
+    return this.firestore.collection(collection, ref => {
+            return ref
+                  .where('email', '==', email)
+                  .where('password', '==', password)
+    }).valueChanges();
+  } 
 
 }

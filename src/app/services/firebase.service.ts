@@ -44,6 +44,14 @@ export class FirebaseService {
   */
   getAll(collection){
     return this.firestore.collection('/'+collection+'/')
+  }
+
+  /* 
+  * Function to fetch all records with order
+  * Parrams: collection - mention the collection name
+  */
+  getAllWithOrderBy(collection, fieldName, order) {
+    return this.firestore.collection('/' + collection + '/').ref.orderBy(fieldName, order)
   }  
   
   /* 

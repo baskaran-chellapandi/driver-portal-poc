@@ -1,33 +1,12 @@
 <ion-content class="ion-padding" scroll-y="false">
   <ion-slides pager="true" [options]="slideOpts">
-    <ion-slide>
-      <div class="slide">
-        <img src="assets/image/werner-pro.jpg" />
-        <h3>Welcome</h3>
-        <p><b>Drive Werner</b> provides tools and information to make working as a professional driver easier.
-          Application providing useful tools for drivers of Werner perform efficiently.
-        </p>
-      </div>
-    </ion-slide>
-    <ion-slide>
-      <img src="assets/image/map.jpg" />
-      <h3>Find approved fuel stops</h3>
-      <p><b>Drive Werner</b> provides map to find approved fuel stops, Werner Terminal, Chain Banks and Drop Yards.</p>
-    </ion-slide>
-    <ion-slide>
-      <img src="assets/image/pay.jpg" />
-      <h3>View your latest pay checks</h3>
-      <p><b>Drive Werner</b> provides latest pay checks information with recent pay history.</p>
-    </ion-slide>
-    <ion-slide>
-      <img src="assets/image/job.jpg" />
-      <h3>Track your all Jobs status</h3>
-      <p><b>Drive Werner</b> provides option to track your previous, current and pre-assigned jobs status</p>
-    </ion-slide>
-    <ion-slide>
-      <img src="assets/image/werner.jpg" />
-      <h3>Ready to Drive?</h3>
-      <ion-button fill="clear">Dashboard <ion-icon slot="end" name="arrow-forward"></ion-icon></ion-button>
+    <ion-slide *ngFor="let slide of slideData; last as isLast">
+      <img src="{{slide.url}}" />
+      <h3>{{slide.title}}</h3>
+      <p *ngIf="!isLast">{{slide.content}}</p>
+      <ion-button fill="clear" routerLink='/user/login' *ngIf="isLast">Continue <ion-icon slot="end"
+          name="arrow-forward"></ion-icon>
+      </ion-button>
     </ion-slide>
   </ion-slides>
 </ion-content>

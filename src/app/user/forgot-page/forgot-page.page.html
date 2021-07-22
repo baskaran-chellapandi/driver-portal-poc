@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Reset Your Password</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center">
+  <form #form="ngForm" (ngSubmit)="send(form)">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <div text-center>
+            <h3>Forgot Password</h3>
+          </div>
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Email</ion-label>
+              <ion-input type="email" ngModel name="email" required email
+                pattern="[A-Za-z0-9._%+-]{3,}@[a-zA-Z]{3,}([.]{1}[a-zA-Z]{2,}|[.]{1}[a-zA-Z]{2,}[.]{1}[a-zA-Z]{2,})"
+                #emailCtrl="ngModel"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="!emailCtrl.valid && emailCtrl.touched" lines="none">
+              <ion-label color="danger">
+                Should be a valid email address.
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-button type="submit" color="primary" expand="block" [disabled]="!form.valid || submitDisabled">
+            {{isSent ? 'Re-Send' : 'Send'}}
+            <ion-spinner name="bubbles" *ngIf="isLoading"></ion-spinner>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+  <small>
+    Please provide the username or email address that you used when you signed
+    up for your Evernote account. <a *ngIf="isSent" routerLink='/user/forgot/reset'>Reset Link</a>
+  </small>
+</ion-content>

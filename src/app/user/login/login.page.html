@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>login</ion-title>
+    <ion-title class="ion-text-center">Login</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -37,17 +37,8 @@
                 ngModel
                 name="password"
                 required
-                minlength="6"
                 #passwordCtrl="ngModel"
               ></ion-input>
-            </ion-item>
-            <ion-item
-              *ngIf="!passwordCtrl.valid && passwordCtrl.touched"
-              lines="none"
-            >
-              <ion-label>
-                Should at least be 6 characters long.
-              </ion-label>
             </ion-item>
           </ion-list>
         </ion-col>

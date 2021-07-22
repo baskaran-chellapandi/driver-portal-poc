@@ -10,8 +10,8 @@ import { UserService } from '../user.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  isLoading = false;
-  isInvalid = false;
+  public isLoading : Boolean = false;
+  public isInvalid : Boolean = false;
   private loginUser : User;
 
   constructor(
@@ -34,14 +34,18 @@ export class LoginPage implements OnInit {
    
     console.log(this.loginUser);
     this.isLoading = true;
+
     this.userService.login(this.loginUser).subscribe(
       response => {
-        this.isLoading = false;
-        this.router.navigateByUrl('/folder/Inbox');
-        form.reset();
-      },error => {
-        this.isLoading = false;
-        this.router.navigateByUrl('/folder/Inbox');
-    });
+        console.log(response);
+        if (response && response.length > 0){
+          this.isLoading = false;
+          this.router.navigateByUrl('/folder/Inbox');
+        } else {
+          this.isLoading = false;
+          this.isInvalid = true;
+        }
+      }
+    );
   }
 }

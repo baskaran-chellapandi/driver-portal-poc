@@ -10,8 +10,9 @@ import { UserService } from '../user.service';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage implements OnInit {
-  isLoading = false;
+  public isLoading : Boolean = false;
   private newUser : User;
+  public selectedImage : string;
 
   constructor(
     private router : Router,
@@ -34,18 +35,29 @@ export class RegisterPage implements OnInit {
        firstName:  form.value.firstName,
        lastName : form.value.lastName,
        role : form.value.role,
-       gender : form.value.gender
+       gender : form.value.gender,
+    }
+    if (this.selectedImage) {
+      this.newUser.imageUrl = this.selectedImage;
     }
     console.log(this.newUser);
-    this.userService.signup(this.newUser).subscribe(
-      response => {
-        this.isLoading = false;
-        this.router.navigateByUrl('/folder/Inbox');
-      },
-      error => {
-        this.isLoading = false;
-        this.router.navigateByUrl('/folder/Inbox');
-      }
-    );
+    this.userService.signup(this.newUser).then(()=> {
+      this.isLoading = false;
+      this.router.navigateByUrl('/folder/Inbox');
+    });
+   }
+
+
+   onFileChosen(event: Event){
+    const pickedFile = (event.target as HTMLInputElement).files[0];
+    if (!pickedFile) {
+      return;
+    }
+    const fr = new FileReader();
+    fr.onload = () => {
+      const dataUrl = fr.result.toString();
+      this.selectedImage = dataUrl;
+    };
+    fr.readAsDataURL(pickedFile);
    }
 }

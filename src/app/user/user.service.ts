@@ -1,19 +1,23 @@
 import { Injectable } from '@angular/core';
 import { User } from './user.model';
 import { HttpClient } from '@angular/common/http';
+import { FirebaseService } from '../services/firebase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor(private http: HttpClient) { }
-
+  constructor(
+    private http: HttpClient,
+    private firebaseService : FirebaseService
+    ) { }
+  
   login(user: User) {
-    return this.http.post('https://reqres.in/api/login', user);
+    return this.firebaseService.validateLoginInfo("User",user.email,user.password);
   }
   signup(user: User) {
-    return this.http.post('https://reqres.in/api/register', user);
+    return this.firebaseService.add("User",user);
   }
 
   /**

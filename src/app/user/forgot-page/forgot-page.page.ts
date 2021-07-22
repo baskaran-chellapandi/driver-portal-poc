@@ -22,10 +22,11 @@ export class ForgotPagePage implements OnInit {
       return;
     }
     const resetPasswordParam = { 'email': form.value.email };
+    this.isSent = true;
+    this.isLoading = false;
     this.submitDisabled = true;
     setTimeout(() => {
       this.submitDisabled = false;
-      this.isSent = true;
     }, 10000);
     this.userService.sendResetPasswordLink(resetPasswordParam).subscribe(
       response => {

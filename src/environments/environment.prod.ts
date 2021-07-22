@@ -4,6 +4,7 @@ export const environment = {
     apiKey: "AIzaSyDhdVzJzwJOkrRkyQ7KPNMRwSuEWCJyRQM",
     authDomain: "falcons-poc.firebaseapp.com",
     projectId: "falcons-poc",
+    databaseURL: "https://falcons-poc-default-rtdb.firebaseio.com",
     storageBucket: "falcons-poc.appspot.com",
     messagingSenderId: "3886684342",
     appId: "1:3886684342:web:354040e6d610c22a9aae17",

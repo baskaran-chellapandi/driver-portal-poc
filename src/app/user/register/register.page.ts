@@ -43,14 +43,12 @@ export class RegisterPage implements OnInit {
     console.log(this.newUser);
     
     this.userService.signup(this.newUser)
-      .then(function (results) {
-        console.log("results!");
-        console.log(results);
-      })
-      .catch(function (error) {
-        console.log("error!");
-        console.log(error);
-      });
+    .then(
+      response => {
+        console.log(response);
+          this.isLoading = false;
+          this.router.navigateByUrl('/user/dashboard');
+    });
   }
 
 

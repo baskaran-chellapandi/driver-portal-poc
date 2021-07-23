@@ -32,11 +32,11 @@ export class ResetPasswordComponent implements OnInit {
     this.isLoading = true;
     this.userService.userData.password = form.value.confirmPassword;
     this.userService.updatePassword(this.userService.userData)
-    .then(function (results) {
+    .then(results => {
       console.log(results);
       this.router.navigateByUrl('/user/login');
     })
-    .catch(function (error) {
+    .catch((err) => { 
       this.errMessage = 'Token Expired, Please Try again';
       this.isLoading = false;
     });

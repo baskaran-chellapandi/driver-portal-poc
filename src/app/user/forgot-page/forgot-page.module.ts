@@ -8,7 +8,6 @@ import { ForgotPagePageRoutingModule } from './forgot-page-routing.module';
 
 import { ForgotPagePage } from './forgot-page.page';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
-import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 
 @NgModule({
   imports: [
@@ -18,9 +17,6 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
     ForgotPagePageRoutingModule,
     ReactiveFormsModule
   ],
-  declarations: [ForgotPagePage, ResetPasswordComponent],
-  providers: [
-    LocationAccuracy
-  ]
+  declarations: [ForgotPagePage, ResetPasswordComponent]
 })
 export class ForgotPagePageModule {}

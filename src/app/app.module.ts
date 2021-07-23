@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { IonicStorageModule } from '@ionic/storage-angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 // firebase
@@ -17,15 +18,16 @@ import { AngularFirestore } from '@angular/fire/firestore';
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    BrowserModule, 
-    IonicModule.forRoot(), 
+    BrowserModule,
+    IonicModule.forRoot(),
+    IonicStorageModule.forRoot(),
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     HttpClientModule,
     AngularFireDatabaseModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },FirebaseService,AngularFirestore],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, FirebaseService, AngularFirestore],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

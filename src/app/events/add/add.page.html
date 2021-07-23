@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Event Add</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list lines="full">
+   
+    <form [formGroup]="EventAddForm" (ngSubmit)="formSubmit()">
+
+      <!--Event Name-->
+      <ion-item>
+        <ion-label position="floating">Event Name</ion-label>
+        <ion-input formControlName="name" type="text" required></ion-input>
+
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.name.errors?.required">
+          Name is required.
+        </span>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.name.errors?.minlength">
+          Name should be min 5 chars long.
+        </span>        
+      </ion-item>
+
+      <!--Event Description-->
+      <ion-item>
+        <ion-label position="floating">Event Desc</ion-label>
+        <ion-textarea formControlName="desc" type="text" required>
+        </ion-textarea>
+
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.desc.errors?.required">
+          Description is required.
+        </span>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.desc.errors?.minlength">
+          Description should be min 25 chars long.
+        </span>         
+      </ion-item>
+
+      <!--Event Location-->
+      <ion-item>
+        <ion-label position="floating">Location</ion-label>
+        <ion-input formControlName="location" type="text" required>
+        </ion-input>
+
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.location.errors?.required">
+          Location is required.
+        </span>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.location.errors?.minlength">
+          Location should be min 5 chars long.
+        </span>            
+      </ion-item>
+
+      <!--Event Image -->
+      <ion-item>
+        <!--<ion-label position="floating">Image</ion-label> -->
+        <ion-input formControlName="location" type="file" required>
+        </ion-input>
+      </ion-item>   
+
+      <ion-item>
+        <ion-label>Status</ion-label>
+        <ion-select placeholder="Select Status...">
+          <ion-select-option value="not_started">Not Started</ion-select-option>
+          <ion-select-option value="Started">Started</ion-select-option>
+          <ion-select-option value="completed">Completed</ion-select-option>
+        </ion-select>
+      </ion-item>            
+
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" color="primary" shape="full" expand="block">Add Event</ion-button>
+        </ion-col>
+      </ion-row>
+
+    </form>
+
+  </ion-list>
+
+</ion-content>
+
+

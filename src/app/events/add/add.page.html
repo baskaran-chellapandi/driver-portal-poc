@@ -54,17 +54,23 @@
       <!--Event Image -->
       <ion-item>
         <!--<ion-label position="floating">Image</ion-label> -->
-        <ion-input formControlName="location" type="file" required>
+        <ion-input formControlName="file" type="file" (change)="on_select_file($event)" required>
         </ion-input>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.file.errors?.required">
+          File is required.
+        </span>        
       </ion-item>   
 
       <ion-item>
         <ion-label>Status</ion-label>
-        <ion-select placeholder="Select Status...">
+        <ion-select formControlName="status" placeholder="Select Status...">
           <ion-select-option value="not_started">Not Started</ion-select-option>
           <ion-select-option value="Started">Started</ion-select-option>
           <ion-select-option value="completed">Completed</ion-select-option>
         </ion-select>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.status.errors?.required">
+          Status is required.
+        </span>          
       </ion-item>            
 
       <ion-row>

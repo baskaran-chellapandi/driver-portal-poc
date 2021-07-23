@@ -17,8 +17,9 @@ export class UserService {
   login(user: User) {
     return this.firebaseService.validateLoginInfo("User",user.email,user.password);
   }
+  
   signup(user: User) {
-    return this.firebaseService.add("User",user);
+    return this.firebaseService.add("User", user);
   }
 
   /**

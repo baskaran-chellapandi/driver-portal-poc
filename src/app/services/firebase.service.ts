@@ -15,9 +15,9 @@ export class FirebaseService {
   * Parrams: collection - mention the collection name
   * Parrams: document - document should in json format
   */
-  add(collection,document){
-    return this.firestore.collection('/'+collection+'/').add(document)
-  }  
+  add(collection, document) {
+    return this.firestore.collection(collection).doc(document.email).set(document)
+  }
 
   /* 
   * Update Data to firebase

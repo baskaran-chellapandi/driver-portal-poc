@@ -40,7 +40,7 @@ export class LoginPage implements OnInit {
         console.log(response);
         if (response && response.length > 0){
           this.isLoading = false;
-          this.router.navigateByUrl('/folder/Inbox');
+          this.router.navigateByUrl('/user/dashboard');
         } else {
           this.isLoading = false;
           this.isInvalid = true;

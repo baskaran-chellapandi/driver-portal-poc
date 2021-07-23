@@ -4,8 +4,9 @@
       <img src="{{slide.url}}" />
       <h3>{{slide.title}}</h3>
       <p *ngIf="!isLast">{{slide.content}}</p>
-      <ion-button fill="clear" routerLink='/user/login' *ngIf="isLast">Continue <ion-icon slot="end"
-          name="arrow-forward"></ion-icon>
+      <ion-button fill="clear" (click)="goLogin()" *ngIf="isLast">Continue
+        <ion-icon slot="end" name="arrow-forward">
+        </ion-icon>
       </ion-button>
     </ion-slide>
   </ion-slides>

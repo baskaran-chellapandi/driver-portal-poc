@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../user.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-reset-password',
@@ -12,7 +13,7 @@ export class ResetPasswordComponent implements OnInit {
   public isLoading: Boolean = false;
   public errMessage: String = '';
   public isPassWordChanged: Boolean = false;
-  constructor(public userService: UserService, private router: Router) { }
+  constructor(public userService: UserService, private router: Router, public toastController: ToastController) { }
 
   ngOnInit() {
   }
@@ -33,13 +34,26 @@ export class ResetPasswordComponent implements OnInit {
     this.userService.userData.password = form.value.confirmPassword;
     this.userService.updatePassword(this.userService.userData)
     .then(results => {
-      console.log(results);
-      this.router.navigateByUrl('/user/login');
-    })
-    .catch((err) => { 
+      this.presentToast();
+      setTimeout(() => {
+        this.isLoading = false;
+        this.router.navigate(['/user/login']);
+      }, 1000);
+    }).catch((err) => {
       this.errMessage = 'Token Expired, Please Try again';
       this.isLoading = false;
     });
+  }
+
+  /**
+   * This method for render alert popup
+   */
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: 'Your password changed successfully.',
+      duration: 5000
+    });
+    toast.present();
   }
 }
 

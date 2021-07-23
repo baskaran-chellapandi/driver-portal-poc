@@ -41,11 +41,17 @@ export class RegisterPage implements OnInit {
       this.newUser.imageUrl = this.selectedImage;
     }
     console.log(this.newUser);
-    this.userService.signup(this.newUser).then(()=> {
-      this.isLoading = false;
-      this.router.navigateByUrl('/folder/Inbox');
-    });
-   }
+    
+    this.userService.signup(this.newUser)
+      .then(function (results) {
+        console.log("results!");
+        console.log(results);
+      })
+      .catch(function (error) {
+        console.log("error!");
+        console.log(error);
+      });
+  }
 
 
    onFileChosen(event: Event){

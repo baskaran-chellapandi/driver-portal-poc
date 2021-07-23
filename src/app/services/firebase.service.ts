@@ -25,9 +25,9 @@ export class FirebaseService {
   * Parrams: collection - mention the collection name
   * Parrams: document - document should in json format
   */
-  set(collection,id,document){
-    return this.firestore.doc('/'+collection+'/'+id).update(document)
-  }    
+  set(collection, id, document) {
+    return this.firestore.doc('/' + collection + '/' + id).update(document)
+  }
 
   /* 
   * Delete Data to firebase
@@ -62,6 +62,18 @@ export class FirebaseService {
     return this.firestore.collection('/'+collection+'/').doc(id)
     
   } 
+
+  /* 
+* Function to validate forgot password link
+* Parrams: collection - mention the collection name
+* Parrams: Email - User email
+*/
+  checkUserData(collection, email) {
+    return this.firestore.collection(collection, ref => {
+      return ref
+        .where('email', '==', email)
+    }).valueChanges();
+  }
   
   /* 
   * Function to validate login

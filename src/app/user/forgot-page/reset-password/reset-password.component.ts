@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserService } from '../../user.service';
 
 @Component({
@@ -9,10 +10,9 @@ import { UserService } from '../../user.service';
 })
 export class ResetPasswordComponent implements OnInit {
   public isLoading: Boolean = false;
-  public isSent: Boolean = false;
   public errMessage: String = '';
   public isPassWordChanged: Boolean = false;
-  constructor(public userService: UserService, private formBuilder: FormBuilder) { }
+  constructor(public userService: UserService, private router: Router) { }
 
   ngOnInit() {
   }
@@ -25,21 +25,21 @@ export class ResetPasswordComponent implements OnInit {
       this.errMessage = 'Password mismatch';
       return;
     }
-    this.isSent = true;
-    this.isLoading = true;
-    const resetPasswordParam = { 'pass': form.value.confirmPassword };
-    if (true) {
-      this.isPassWordChanged = true;
-    } else {
+    if (!this.userService.userData) {
       this.errMessage = 'Token Expired';
+      return;
     }
-    this.isLoading = false;
-    this.userService.resetPassword(resetPasswordParam).subscribe(
-      response => {
-      },
-      error => {
-      }
-    );
+    this.isLoading = true;
+    this.userService.userData.password = form.value.confirmPassword;
+    this.userService.updatePassword(this.userService.userData)
+    .then(results => {
+      console.log(results);
+      this.router.navigateByUrl('/user/login');
+    })
+    .catch((err) => { 
+      this.errMessage = 'Token Expired, Please Try again';
+      this.isLoading = false;
+    });
   }
 }
 

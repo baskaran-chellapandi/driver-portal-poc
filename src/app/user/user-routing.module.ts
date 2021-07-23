@@ -23,6 +23,10 @@ const routes: Routes = [
   {
     path: 'forgot',
     loadChildren: () => import('./forgot-page/forgot-page.module').then( m => m.ForgotPagePageModule)
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
   }
 
 ];

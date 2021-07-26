@@ -4,10 +4,43 @@
       <ion-menu-button>
       </ion-menu-button>
     </ion-buttons>
-    <ion-title>dashboard</ion-title>
+    <ion-title>Dashboard</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-item lines="none">
+    <ion-thumbnail slot="start">
+      <img src="{{userDetails.imageUrl}}">
+    </ion-thumbnail>
+    <ion-label>
+      <ion-item-divider>
+        <p>{{userDetails.firstName}} {{userDetails.lastName}}</p>
+      </ion-item-divider>
+      <ion-item-divider>
+        <p>{{userDetails.email}}</p>
+      </ion-item-divider>
+      <ion-item-divider>
+        <p>{{userDetails.gender | titlecase }}</p>
+      </ion-item-divider>
+    </ion-label>
+  </ion-item>
 
+  <ion-grid *ngIf="eventList && eventList.length > 0">
+    <ion-row class="ion-align-items-center">
+      <ion-col size="6" *ngFor="let events of eventList">
+        <ion-card>
+          <img src="{{events.file}}" />
+          <ion-card-header>
+            <ion-card-subtitle>{{events.name}}</ion-card-subtitle>
+            <ion-card-title>{{events.location}}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            {{events.desc}}
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <app-location-picker></app-location-picker>
 </ion-content>

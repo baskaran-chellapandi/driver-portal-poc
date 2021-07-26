@@ -7,27 +7,24 @@ import { StorageService } from '../app/services/storage.service';
 })
 export class AuthGuard implements CanActivate {
     constructor(private router: Router, private storage: StorageService) { }
-    isAuthorised : boolean = false;
+    isAuthorised: boolean = false;
 
     canActivate(): boolean {
-        // this.storage.get('disableSpalshScreen').then((value) => {
-        //     let disableSpalshScreen = value;
-        //     if (disableSpalshScreen) {
-        //         this.router.navigateByUrl('/user/login');
-        //     } else {
-        //         this.router.navigateByUrl('/');
-        //     }
-        // });
-     
         this.storage.get("token").then(email => {
-            console.log(email);
             if (email) {
                 // authorised so return true
+                this.router.navigateByUrl('/user/dashboard');
                 this.isAuthorised = true;
             } else {
-                // not logged in so redirect to login page with the return url
-            this.router.navigate(['/user/login']);
-            this.isAuthorised = false;
+                // not logged in so redirect to splash or login page based on storage
+                this.storage.get('disableSpalshScreen').then((disableSpalshScreen) => {
+                    if (disableSpalshScreen) {
+                        this.router.navigateByUrl('/user/login');
+                    } else {
+                        this.router.navigateByUrl('/');
+                    }
+                });
+                this.isAuthorised = false;
             }
         });
         return this.isAuthorised;

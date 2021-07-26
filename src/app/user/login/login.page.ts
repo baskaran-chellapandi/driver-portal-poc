@@ -32,12 +32,10 @@ export class LoginPage implements OnInit {
       password : form.value.password
     }
    
-    console.log(this.loginUser);
     this.isLoading = true;
 
     this.userService.login(this.loginUser).subscribe(
       response => {
-        console.log(response);
         if (response && response.length > 0){
           this.isLoading = false;
           this.router.navigateByUrl('/user/dashboard');

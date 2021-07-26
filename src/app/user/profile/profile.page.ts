@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
-import { User } from '../user.model';
 import { UserService } from '../user.service';
 
 @Component({
@@ -11,56 +12,57 @@ import { UserService } from '../user.service';
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
-  public editProfile: FormGroup;
-  private loginUser : User;
+  public profileEditForm: FormGroup;
+  public profilePicUrl : string;
+  public selectedImage : string;
   
   constructor(
     private userService : UserService,
     private loadingCtrl : LoadingController,
-    private router : Router
+    private router : Router,
+    public formbuilder: FormBuilder
     ) { }
 
   ngOnInit() {
+    this.profileEditForm = this.formbuilder.group({
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
+      role :['', [Validators.required]],
+      email: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+      imageUrl: ['', [Validators.required]],
+    });
 
-    this.loginUser = {firstName : "vino",
-    lastName : "raja",
-    email : "vino@gmail.com",
-    password : "welcome123",
-    gender : "female",
-    role : "driver"
-    //imageUrl :  'https://upload.wikimedia.org/wikipedia/commons/0/01/San_Francisco_with_two_bridges_and_the_fog.jpg'
-    };
-    this.editProfile = new FormGroup({
-      firstName: new FormControl(this.loginUser.firstName, {
-        updateOn: 'blur',
-        validators: [Validators.required]
-      }),
-      lastName: new FormControl(this.loginUser.lastName, {
-        updateOn: 'blur',
-        validators: [Validators.required]
-      }),
-      gender : new FormControl(this.loginUser.gender,{
-        updateOn: 'blur',
-        validators: [Validators.required]
-      }),
-      email : new FormControl(this.loginUser.email,{
-        updateOn: 'blur',
-        validators: [Validators.required]
-      }),
-      password : new FormControl(this.loginUser.password,{
-        updateOn: 'blur',
-        validators: [Validators.required]
-      }),
-      role : new FormControl(this.loginUser.role,{
-        updateOn: 'blur',
-        validators: [Validators.required]
-      })
+
+    this.userService.getUserData().then(response => {
+      if (response) {
+        this.profilePicUrl = response["imageUrl"];
+        this.profileEditForm.setValue(response);
+      }
     });
   }
 
-  onUpdateProfile() {
-    if (!this.editProfile.valid) {
+  onFileChosen(event: Event){
+    const pickedFile = (event.target as HTMLInputElement).files[0];
+    if (!pickedFile) {
       return;
+    }
+    const fr = new FileReader();
+    fr.onload = () => {
+      const dataUrl = fr.result.toString();
+      this.selectedImage = dataUrl;
+    };
+    fr.readAsDataURL(pickedFile);
+   }
+
+  onUpdateProfile() {
+    if (!this.profileEditForm.valid) {
+      return;
+    }
+
+    if ( this.selectedImage){
+      this.profileEditForm.value.imageUrl = this.selectedImage;
     }
     this.loadingCtrl
       .create({
@@ -68,13 +70,13 @@ export class ProfilePage implements OnInit {
       })
       .then(loadingEl => {
         loadingEl.present();
-        console.log(this.editProfile.value);
-        this.userService.updateProfile(this.editProfile.value)
+        console.log(this.profileEditForm.value);
+        this.userService.updateProfile(this.profileEditForm.value)
         .then(
           response => {
             console.log(response);
             loadingEl.dismiss();
-            this.editProfile.reset();
+            this.profileEditForm.reset();
             this.router.navigateByUrl("/user/dashboard");
         });
       });

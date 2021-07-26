@@ -1,9 +1,29 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>events</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="user/dashboard"></ion-back-button>
+    </ion-buttons>  
+    <ion-title>Events</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
+    <ion-grid>
+      <ion-row dragula="Events" [(dragulaModel)]="events">
+        <!-- iterate each events-->
+        <ion-col offset=".15" class="vamp" *ngFor="let event of events">
+            <ion-card>
+              <img [src]="event.file"/>
+              <ion-card-content>
+                <ion-card-title>
+                  {{ event.name }}
+                  </ion-card-title>
+              </ion-card-content>
+            </ion-card>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
 
 </ion-content>

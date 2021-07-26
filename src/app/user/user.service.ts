@@ -22,8 +22,8 @@ export class UserService {
   }
 
 
-  updateProfile (user : User){
-
+  updateProfile (user : User) {
+    return this.firebaseService.set("User",user.email,user);
   }
 
   /**
@@ -34,7 +34,6 @@ export class UserService {
   public sendResetPasswordLink = (resetLinkParam) => {
     return this.firebaseService.checkUserData("User", resetLinkParam);
   }
-  
 
   /**
  * This method for send reset link API

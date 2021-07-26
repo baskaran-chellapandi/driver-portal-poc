@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { User } from '../user.model';
 import { UserService } from '../user.service';
@@ -15,18 +16,19 @@ export class ProfilePage implements OnInit {
   
   constructor(
     private userService : UserService,
-    private loadingCtrl : LoadingController
+    private loadingCtrl : LoadingController,
+    private router : Router
     ) { }
 
   ngOnInit() {
 
     this.loginUser = {firstName : "vino",
-    lastName : "anu",
-    email : "dfdfd",
-    password : "111",
-    gender : "male",
-    role : "driver",
-    imageUrl :  'https://upload.wikimedia.org/wikipedia/commons/0/01/San_Francisco_with_two_bridges_and_the_fog.jpg'
+    lastName : "raja",
+    email : "vino@gmail.com",
+    password : "welcome123",
+    gender : "female",
+    role : "driver"
+    //imageUrl :  'https://upload.wikimedia.org/wikipedia/commons/0/01/San_Francisco_with_two_bridges_and_the_fog.jpg'
     };
     this.editProfile = new FormGroup({
       firstName: new FormControl(this.loginUser.firstName, {
@@ -67,7 +69,14 @@ export class ProfilePage implements OnInit {
       .then(loadingEl => {
         loadingEl.present();
         console.log(this.editProfile.value);
-        this.userService.updateProfile(this.editProfile.value);
+        this.userService.updateProfile(this.editProfile.value)
+        .then(
+          response => {
+            console.log(response);
+            loadingEl.dismiss();
+            this.editProfile.reset();
+            this.router.navigateByUrl("/user/dashboard");
+        });
       });
   }
 

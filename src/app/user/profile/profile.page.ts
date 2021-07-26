@@ -31,13 +31,17 @@ export class ProfilePage implements OnInit {
       role :['', [Validators.required]],
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
-      imageUrl: ['', [Validators.required]],
+      imageUrl: ['', [Validators.required]]
     });
 
 
     this.userService.getUserData().then(response => {
       if (response) {
-        this.profilePicUrl = response["imageUrl"];
+        if( response["imageUrl"]){
+          this.profilePicUrl = response["imageUrl"];
+        } else {
+          response["imageUrl"] = "";
+        }
         this.profileEditForm.setValue(response);
       }
     });

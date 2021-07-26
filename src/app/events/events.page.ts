@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../services/firebase.service'
 import { DragulaService } from 'ng2-dragula';
+import { StorageService } from '../services/storage.service';
 @Component({
   selector: 'app-events',
   templateUrl: './events.page.html',
@@ -9,13 +10,16 @@ import { DragulaService } from 'ng2-dragula';
 export class EventsPage implements OnInit {
   events:any
   user_info:any
+  email:string
   constructor(
     public firebase: FirebaseService,
-    private dragulaService: DragulaService
+    private dragulaService: DragulaService,
+    public storageService:StorageService
   ) { 
-
+    this.storageService.get("token").then(token =>{
+      this.email = token
+    })
     this.dragulaService.dropModel("Events").subscribe(args => {
-      console.log(args);
       this.process_order(args)
     });
 
@@ -45,25 +49,15 @@ export class EventsPage implements OnInit {
       result.push(each_data.id)
     }
 
-    console.log("======= Result Push ========")
-    console.log(result)    
-
-    this.user_info = this.firebase.getOne("User","baskar@yopmail.com").valueChanges().subscribe(response => { 
-      console.log("======= User Push ========")
+    this.user_info = this.firebase.getOne("User",this.email).valueChanges().subscribe(response => { 
       let user = response      
       user["event_order"] = result
-      console.log(user)
-      this.firebase.set("User","baskar@yopmail.com",user).then( response => {
-        console.log("===== Order Updated =======")
+      this.firebase.set("User",this.email,user).then( response => {
         this.user_info.unsubscribe()
       })
     })
 
-
   }  
 
-  async update_order(data){
-
-  }
 
 }

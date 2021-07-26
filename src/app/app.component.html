@@ -21,13 +21,22 @@
             <ion-icon name="business" slot="start"></ion-icon>
             <ion-label>Dashboard</ion-label>
           </ion-item>
-        </ion-menu-toggle>
+        </ion-menu-toggle>  
+ 
         <ion-menu-toggle>
           <ion-item lines="none" routerLink='/user/profile'>
             <ion-icon name="checkbox-outline" slot="start"></ion-icon>
             <ion-label>Profile</ion-label>
           </ion-item>
         </ion-menu-toggle>
+ 
+         <ion-menu-toggle>
+          <ion-item lines="none" routerLink='/events'>
+            <ion-icon name="checkbox-outline" slot="start"></ion-icon>
+            <ion-label>Events</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+ 
         <ion-menu-toggle>
           <ion-item lines="none" (click)="onLogout()" button>
             <ion-icon name="exit" slot="start"></ion-icon>

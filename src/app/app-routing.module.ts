@@ -10,7 +10,8 @@ const routes: Routes = [
   },
   {
     path: 'folder/:id',
-    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
+    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'user',
@@ -18,7 +19,8 @@ const routes: Routes = [
   },
   {
     path: 'events',
-    loadChildren: () => import('./events/events.module').then( m => m.EventsPageModule)
+    loadChildren: () => import('./events/events.module').then( m => m.EventsPageModule),
+    canActivate: [AuthGuard]
   }
 ];
 

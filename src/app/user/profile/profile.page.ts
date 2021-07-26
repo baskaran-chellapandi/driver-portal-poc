@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { UserService } from '../user.service';
@@ -31,6 +33,7 @@ export class ProfilePage implements OnInit {
       password: ['', [Validators.required]],
       imageUrl: ['', [Validators.required]],
     });
+
 
     this.userService.getUserData().then(response => {
       if (response) {

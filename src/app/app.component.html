@@ -1,6 +1,6 @@
 <ion-app>
   <!-- <ion-split-pane contentId="main-content"> -->
-  <ion-menu side="start" menuId="menu1" contentId="main-content">
+  <ion-menu side="start" menuId="menu1" contentId="main-content" (ionWillOpen)="onMenuOpen()">
     <ion-content>
       <ion-list>
         <ion-list-header>{{userDetails.firstName}} {{userDetails.lastName}}</ion-list-header>

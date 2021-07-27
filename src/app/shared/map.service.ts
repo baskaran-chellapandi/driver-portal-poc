@@ -20,13 +20,6 @@ export class MapService {
         this.map = new TrimbleMaps.Map(options);
 
         this.map.addControl(new TrimbleMaps.NavigationControl());
-
-        const scale = new TrimbleMaps.ScaleControl({
-            maxWidth: 80,
-            unit: 'imperial'
-        });
-        this.map.addControl(scale);
-
         return this.map;
     }
 

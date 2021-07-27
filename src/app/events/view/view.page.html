@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{event.name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row class="ion-align-items-center">
+      <ion-col>
+        <ion-card>
+          <img src="{{event.file}}" />
+          <ion-card-header>
+            <ion-card-subtitle>{{event.location}}</ion-card-subtitle>
+            <ion-card-title>{{event.name}}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            {{event.desc}}
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <app-location-picker></app-location-picker>
+</ion-content>

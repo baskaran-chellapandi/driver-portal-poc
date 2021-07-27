@@ -31,7 +31,8 @@ export class ProfilePage implements OnInit {
       role :['', [Validators.required]],
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
-      imageUrl: ['', [Validators.required]]
+      imageUrl: ['', [Validators.required]],
+      event_order: ['']
     });
 
 
@@ -41,6 +42,9 @@ export class ProfilePage implements OnInit {
           this.profilePicUrl = response["imageUrl"];
         } else {
           response["imageUrl"] = "";
+        }
+        if (!response["event_order"]){
+          response["event_order"] = "";
         }
         this.profileEditForm.setValue(response);
       }

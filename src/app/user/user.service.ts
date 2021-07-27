@@ -22,11 +22,13 @@ export class UserService {
   }
   signup(user: User) {
     this.storageService.set("token", user.email);
+    this.storageService.set("role", user.role);
     return this.firebaseService.add("User", user.email , user);
   }
 
   logout(){
     this.storageService.remove("token");
+    this.storageService.remove("role");
   }
 
   getUserData () {

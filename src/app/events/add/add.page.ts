@@ -70,7 +70,8 @@ export class AddPage implements OnInit {
     if (!this.EventAddForm.valid) {
       console.log('Please provide all the required values!')
       console.log(this.EventAddForm.value)
-      this.isSubmitted = false;
+      console.log(this.errorControl)
+      // this.isSubmitted = false;
       return false;
     } else {
       this.add_data = this.EventAddForm.value

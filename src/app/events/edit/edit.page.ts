@@ -73,7 +73,7 @@ export class EditPage implements OnInit {
     if (!this.EventEditForm.valid) {
       console.log('Please provide all the required values!')
       console.log(this.EventEditForm.value)
-      this.isSubmitted = false;
+      // this.isSubmitted = false;
       return false;
     } else {
       this.edit_data = this.EventEditForm.value

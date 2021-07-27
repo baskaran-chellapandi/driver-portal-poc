@@ -22,6 +22,8 @@
                 <ion-card-title>
                   {{ event.name }}
                   </ion-card-title>
+                  <ion-buttons style="float:right; margin-top: -20px; margin-right: 20px;" (click) = "gotoedit(event)">  <ion-icon size="small  " name="create"></ion-icon> </ion-buttons>
+                  <ion-buttons style="float:right; margin-top: -20px; " (click) = "delete(event)">  <ion-icon size="small  " name="trash"></ion-icon> </ion-buttons>
               </ion-card-content>
             </ion-card>
         </ion-col>

@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder,Validators } from "@angular/forms";
 import { Events } from '../../models/event'
 import { FirebaseService } from '../../services/firebase.service'
 import { ActivatedRoute, Router } from "@angular/router";
-import { debounceTime } from 'rxjs/operators';
+import { Constants } from "../../constants"
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.page.html',
@@ -30,12 +30,16 @@ export class EditPage implements OnInit {
       name: ['', [Validators.required, Validators.minLength(5)]],
       desc: ['', [Validators.required, Validators.minLength(25)]],
       location: ['', [Validators.required, Validators.minLength(5)]],
-      file: ['', [Validators.required]],
+      file: [''],
       status: ['', [Validators.required]]
     })
 
     this.edit_event = this.firebase.getOne("events",this.id).valueChanges().subscribe(response => { 
       console.log("====== Response =========")
+      
+      if(response && !response["file"]){
+        response["file"] = Constants.default_events_logo
+      }
       console.log(response)
       this.response = response
       this.EventEditForm.setValue(response)
@@ -44,7 +48,7 @@ export class EditPage implements OnInit {
   }
 
   ngOnDestroy(){
-    this.edit_event.unsubscripe()
+
   }
 
   get errorControl() {
@@ -73,16 +77,17 @@ export class EditPage implements OnInit {
       return false;
     } else {
       this.edit_data = this.EventEditForm.value
-      this.edit_data["file"] = this.event_image
+      if(this.event_image)
+        this.edit_data["file"] = this.event_image
       
-      delete this.edit_data["file"]
+      // delete this.edit_data["file"]
       this.firebase.add("events",this.id,this.edit_data)
       .then(
         add_response => {
           console.log("======== Add Response ======")
           console.log(add_response);
             this.isSubmitted = false;
-            // this.router.navigateByUrl('/user/dashboard');
+            this.router.navigateByUrl('/events');
       }); 
     }
   }

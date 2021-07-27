@@ -3,6 +3,7 @@ import { FirebaseService } from '../services/firebase.service'
 import { DragulaService } from 'ng2-dragula';
 import { StorageService } from '../services/storage.service';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-events',
@@ -18,7 +19,8 @@ export class EventsPage implements OnInit {
     public firebase: FirebaseService,
     private dragulaService: DragulaService,
     public storageService:StorageService,
-    private route: Router
+    private route: Router,
+    public alertController: AlertController
   ) { 
     this.storageService.get("token").then(token =>{
       this.email = token
@@ -52,7 +54,7 @@ export class EventsPage implements OnInit {
         })  
         console.log("====== This User =======")
         console.log(this.user)
-        
+        //  Do sorting 
         if(this.user && this.user["event_order"]){
           temp_events = temp_events.sort(function(a, b){  
             return curObj.user["event_order"].indexOf(a.id) - curObj.user["event_order"].indexOf(b.id);
@@ -66,6 +68,12 @@ export class EventsPage implements OnInit {
       this.user_info.unsubscribe()
 
     })    
+  }
+
+  gotoedit(event){
+    console.log("====== Event =======")
+    console.log(event)
+    this.route.navigate(['/events/edit/'+event.id]);
   }
 
   async process_order(data) {
@@ -86,6 +94,52 @@ export class EventsPage implements OnInit {
 
   gotodashboard(){
     this.route.navigate(['/events/add']);
+  }
+
+
+  removeByAttr = function(arr, attr, value){
+    var i = arr.length;
+    while(i--){
+       if( arr[i] 
+           && arr[i].hasOwnProperty(attr) 
+           && (arguments.length > 2 && arr[i][attr] === value ) ){ 
+
+           arr.splice(i,1);
+
+       }
+    }
+    this.events = arr
+    return arr;
+}
+
+  async delete(event){
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Confirm!',
+      message: 'Are you sure to delete ?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Yes',
+          handler: () => {
+            console.log('Confirm Okay');
+            
+            this.firebase.delete("events",event.id).then(response => {
+              this.removeByAttr(this.events,"id",event.id)
+            })            
+          }
+        }
+      ]
+    });
+
+    await alert.present();    
+
   }
 
 

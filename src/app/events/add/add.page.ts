@@ -16,6 +16,7 @@ export class AddPage implements OnInit {
   event_image:any;
   add_data: Events;
   add_event:any;
+  get_events:any
   constructor(
     public fb: FormBuilder,
     private router : Router,
@@ -75,20 +76,21 @@ export class AddPage implements OnInit {
       this.add_data = this.EventAddForm.value
       this.add_data["file"] = this.event_image
       var slug = this.convertToSlug(this.add_data["name"])
-      delete this.add_data["file"]
-      this.firebase.getOne("events",slug).valueChanges().subscribe(response => { 
+      // delete this.add_data["file"]
+      this.get_events = this.firebase.getOne("events",slug).valueChanges().subscribe(response => { 
         if(response){
           slug = slug+new Date().getTime()
         }
         console.log("======== Before Add Response ======")
         console.log(response)
+        this.get_events.unsubscribe()
         this.firebase.add("events",slug,this.add_data)
         .then(
           add_response => {
             console.log("======== Add Response ======")
             console.log(add_response);
               this.isSubmitted = false;
-              // this.router.navigateByUrl('/user/dashboard');
+              this.router.navigateByUrl('/events');
         });        
       })
     }

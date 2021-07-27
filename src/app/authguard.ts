@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { StorageService } from '../app/services/storage.service';
 
 @Injectable({
@@ -9,11 +9,15 @@ export class AuthGuard implements CanActivate {
     constructor(private router: Router, private storage: StorageService) { }
     isAuthorised: boolean = false;
 
-    canActivate(): boolean {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         this.storage.get("token").then(email => {
             if (email) {
                 // authorised so return true
-                this.router.navigateByUrl('/user/dashboard');
+                if (state.url == '/') {
+                    this.router.navigateByUrl('/user/dashboard');
+                } else {
+                    this.router.navigateByUrl(state.url);
+                }
                 this.isAuthorised = true;
             } else {
                 // not logged in so redirect to splash or login page based on storage

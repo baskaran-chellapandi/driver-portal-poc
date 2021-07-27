@@ -1,8 +1,8 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import TrimbleMaps from "@trimblemaps/trimblemaps-js";
-import { AlertController } from '@ionic/angular';
-import { Plugins, Capacitor } from '@capacitor/core';
 import { MapService } from "../map.service";
+import { Geolocation, GeolocationPosition } from '@capacitor/geolocation';
+import { Plugins } from "@capacitor/core";
 
 @Component({
   selector: 'app-location-picker',
@@ -20,16 +20,20 @@ export class LocationPickerComponent implements OnInit {
     zoom: 4.7
   };
   @ViewChild("map", { static: true }) mapElement: ElementRef;
-
+  loc: GeolocationPosition;
   public map: object;
 
   constructor(
-    private alertCtrl: AlertController,
     private mapService: MapService
   ) { }
 
   ngOnInit() {
     this.locateUser();
+  }
+
+  async getCurrentPosition() {
+    const { Geolocation } = Plugins;
+    this.loc = await Geolocation.getCurrentPosition();
   }
 
   public displayMap () {
@@ -47,34 +51,12 @@ export class LocationPickerComponent implements OnInit {
   /**
    * THis method for get user current location
    */
-  private locateUser() {
-    if (!Capacitor.isPluginAvailable('Geolocation')) {
-      this.displayMap();
-      this.showErrorAlert();
-      return;
-    }
+  private async locateUser() {
     this.isLoading = true;
-    Plugins.Geolocation.getCurrentPosition()
-      .then(geoPosition => {
-        this.mapCenter.lat = geoPosition.coords.latitude;
-        this.mapCenter.lon = geoPosition.coords.longitude;
-        this.isLoading = false;
-        this.displayMap();
-      })
-      .catch(err => {
-        this.isLoading = false;
-        this.displayMap();
-        this.showErrorAlert();
-      });
-  }
-
-  private showErrorAlert() {
-    this.alertCtrl
-      .create({
-        header: 'Could not fetch location',
-        message: 'Please use the map to pick a location!',
-        buttons: ['Okay']
-      })
-      .then(alertEl => alertEl.present());
+    const position = await Geolocation.getCurrentPosition();
+    this.mapCenter.lat = position.coords.latitude;
+    this.mapCenter.lon = position.coords.longitude;
+    this.isLoading = false;
+    this.displayMap();
   }
 }

@@ -15,6 +15,7 @@ import { FirebaseService } from './services/firebase.service'
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IonicNativePlugin } from '@ionic-native/core'
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,7 +35,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, FirebaseService, AngularFirestore],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+     FirebaseService, AngularFirestore, IonicNativePlugin],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

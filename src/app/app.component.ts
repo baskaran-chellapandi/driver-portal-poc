@@ -13,7 +13,11 @@ export class AppComponent {
   public userDetails: any = [];
   public email: string;
   constructor(private userService: UserService, private firebase: FirebaseService, private storage: StorageService, private router: Router) {
-    storage.get('token').then((email) => {
+    this.loadingUserDetails();
+  }
+
+  loadingUserDetails (){
+    this.storage.get('token').then((email) => {
       this.email = email;
       if (this.email) {
         this.getUserDetails();
@@ -25,6 +29,10 @@ export class AppComponent {
     this.firebase.getOne('User', this.email).valueChanges().subscribe((result) => {
       this.userDetails = result;
     })
+  }
+
+  onMenuOpen (){
+    this.loadingUserDetails();
   }
 
   onLogout() {

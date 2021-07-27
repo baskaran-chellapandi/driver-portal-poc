@@ -7,7 +7,6 @@ import { StorageService } from '../app/services/storage.service';
 })
 export class AuthGuard implements CanActivate {
     constructor(private router: Router, private storage: StorageService) { }
-    isAuthorised: boolean = false;
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         this.storage.get("token").then(email => {
@@ -18,7 +17,6 @@ export class AuthGuard implements CanActivate {
                 } else {
                     this.router.navigateByUrl(state.url);
                 }
-                this.isAuthorised = true;
             } else {
                 // not logged in so redirect to splash or login page based on storage
                 this.storage.get('disableSpalshScreen').then((disableSpalshScreen) => {
@@ -28,9 +26,8 @@ export class AuthGuard implements CanActivate {
                         this.router.navigateByUrl('/');
                     }
                 });
-                this.isAuthorised = false;
             }
         });
-        return this.isAuthorised;
+        return true;
     }
 }

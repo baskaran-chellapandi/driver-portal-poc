@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -8,7 +8,7 @@ import { StorageService } from 'src/app/services/storage.service';
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
 })
-export class DashboardPage implements OnInit, AfterViewInit {
+export class DashboardPage implements OnInit {
   public eventList: any;
   public userDetails: any = [];
   public email: string;

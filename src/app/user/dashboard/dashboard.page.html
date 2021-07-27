@@ -11,7 +11,7 @@
 <ion-content>
   <ion-item lines="none">
     <ion-thumbnail slot="start">
-      <img src="{{userDetails.imageUrl}}">
+      <img [src]="userDetails.imageUrl ? userDetails.imageUrl : 'assets/image/default-profile.jpg'">
     </ion-thumbnail>
     <ion-label>
       <ion-item-divider>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { StorageService } from 'src/app/services/storage.service';
 import { User } from '../user.model';
 import { UserService } from '../user.service';
 
@@ -16,7 +17,8 @@ export class LoginPage implements OnInit {
 
   constructor(
     private router : Router,
-    private userService : UserService
+    private userService : UserService,
+    private storageService : StorageService
   ) { }
 
   ngOnInit() {
@@ -37,6 +39,7 @@ export class LoginPage implements OnInit {
     this.userService.login(this.loginUser).subscribe(
       response => {
         if (response && response.length > 0){
+          this.storageService.set("role", response[0]["role"]);
           this.isLoading = false;
           this.router.navigateByUrl('/user/dashboard');
         } else {

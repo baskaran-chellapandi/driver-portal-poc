@@ -43,7 +43,7 @@ export class LocationPickerComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.locateUser();
+    this.checkGPSPermission();
   }
 
   async getCurrentPosition() {
@@ -56,11 +56,9 @@ export class LocationPickerComponent implements OnInit {
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
       result => {
         if (result.hasPermission) {
-
           //If having permission show 'Turn On GPS' dialogue
           this.askToTurnOnGPS();
         } else {
-
           //If not having permission ask for permission
           this.requestGPSPermission();
         }
@@ -104,15 +102,13 @@ export class LocationPickerComponent implements OnInit {
 
   // Methos to get device accurate coordinates using device GPS
   getLocationCoordinates() {
-    this.locateUser();
     Geolocation.getCurrentPosition().then((resp) => {
-      console.log(resp);
-      this.locationCoords.latitude = resp.coords.latitude;
-      this.locationCoords.longitude = resp.coords.longitude;
-      this.locationCoords.accuracy = resp.coords.accuracy;
-      this.locationCoords.timestamp = resp.timestamp;
+      this.mapCenter.lat = resp.coords.latitude;
+      this.mapCenter.lon = resp.coords.longitude;
+      this.displayMap();
     }).catch((error) => {
-      alert('Error getting location' + error);
+      this.displayMap();
+      alert('Error getting location, Please Choose manually' + error);
     });
   }
 

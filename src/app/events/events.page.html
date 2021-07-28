@@ -15,20 +15,24 @@
     <ion-grid>
       <ion-row dragula="Events" [(dragulaModel)]="events">
         <!-- iterate each events-->
-        <ion-col offset=".15" class="vamp" *ngFor="let event of events">
-            <ion-card>
-              <img [src]="event.file"/>
-              <ion-card-content>
-                <ion-card-title>
-                  {{ event.name }}
-                  </ion-card-title>
-                  <div *ngIf="admin == true"> 
-                  <ion-buttons style="float:right; margin-top: -20px; margin-right: 20px;" (click) = "gotoedit(event)">  <ion-icon size="small  " name="create"></ion-icon> </ion-buttons>
-                  <ion-buttons style="float:right; margin-top: -20px; " (click) = "delete(event)">  <ion-icon size="small  " name="trash"></ion-icon> </ion-buttons>
-                  </div>
-              </ion-card-content>
-            </ion-card>
+
+        <ion-col size-md="3" push-md="1" class="vamp" *ngFor="let event of events">
+            <div class="image">
+              <img mat-card-image [src]="event.file"/>
+            </div>
+
+            <div class="Desc">
+              <div class="title"> 
+                {{ event.name | slice:0:6 }}
+              </div>
+              <div class="action" *ngIf="admin == true"> 
+                <ion-buttons class="edit-action"  (click) = "gotoedit(event)">  <ion-icon size="small  " name="create"></ion-icon> </ion-buttons>
+                  <ion-buttons class="delete-action" (click) = "delete(event)">  <ion-icon size="small  " name="trash"></ion-icon> </ion-buttons>                
+              </div>            
+            </div>              
         </ion-col>
+      
+    
 
       </ion-row>
     </ion-grid>

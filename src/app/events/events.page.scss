@@ -35,3 +35,34 @@
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
     filter: alpha(opacity=20);
 }
+
+ion-col {
+    border: 0.1px dotted grey;
+    text-align: center;
+    white-space: nowrap;
+    display: inline-block;
+    padding: 2px;
+    margin: 5px;
+}
+
+.title {
+    display: inline-block;
+    width: 70%;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.image {
+    max-height: 250px;
+}
+
+.action {
+    display: inline-block;
+    width: 30%;
+}
+
+.edit-action,
+.delete-action {
+    display: inline-block;
+}

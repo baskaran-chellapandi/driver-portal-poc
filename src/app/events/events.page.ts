@@ -15,6 +15,7 @@ export class EventsPage implements OnInit {
   user:any
   user_info:any
   email:string
+  admin:Boolean = false
   constructor(
     public firebase: FirebaseService,
     private dragulaService: DragulaService,
@@ -26,6 +27,13 @@ export class EventsPage implements OnInit {
       this.email = token
       this.get_user_info()
     })
+
+    this.storageService.get("role").then(role =>{ 
+      if(role == "admin"){
+        this.admin = true
+      }
+    })
+
     this.dragulaService.dropModel("Events").subscribe(args => {
       this.process_order(args)
     });
@@ -92,7 +100,7 @@ export class EventsPage implements OnInit {
     })
   }  
 
-  gotodashboard(){
+  gotoadd(){
     this.route.navigate(['/events/add']);
   }
 

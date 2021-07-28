@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="user/dashboard"></ion-back-button>
     </ion-buttons>  
     <ion-title>Events</ion-title>
-    <ion-buttons (click)="gotodashboard()" slot="end">
+    <ion-buttons *ngIf="admin == true" (click)="gotoadd()" slot="end">
       <ion-icon size="large"  name="add"></ion-icon>
     </ion-buttons>      
   </ion-toolbar>
@@ -22,8 +22,10 @@
                 <ion-card-title>
                   {{ event.name }}
                   </ion-card-title>
+                  <div *ngIf="admin == true"> 
                   <ion-buttons style="float:right; margin-top: -20px; margin-right: 20px;" (click) = "gotoedit(event)">  <ion-icon size="small  " name="create"></ion-icon> </ion-buttons>
                   <ion-buttons style="float:right; margin-top: -20px; " (click) = "delete(event)">  <ion-icon size="small  " name="trash"></ion-icon> </ion-buttons>
+                  </div>
               </ion-card-content>
             </ion-card>
         </ion-col>

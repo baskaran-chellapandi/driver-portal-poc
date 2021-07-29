@@ -4,6 +4,7 @@ import { DragulaService } from 'ng2-dragula';
 import { StorageService } from '../services/storage.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { ActionSheetController } from '@ionic/angular';
 
 @Component({
   selector: 'app-events',
@@ -16,12 +17,14 @@ export class EventsPage implements OnInit {
   user_info:any
   email:string
   admin:Boolean = false
+  driver:Boolean = false
   constructor(
     public firebase: FirebaseService,
     private dragulaService: DragulaService,
     public storageService:StorageService,
     private route: Router,
-    public alertController: AlertController
+    public alertController: AlertController,
+    public actionSheetController: ActionSheetController
   ) { 
     this.storageService.get("token").then(token =>{
       this.email = token
@@ -32,6 +35,9 @@ export class EventsPage implements OnInit {
       if(role == "admin"){
         this.admin = true
       }
+      if(role == "driver"){
+        this.driver = true
+      }      
     })
 
     this.dragulaService.dropModel("Events").subscribe(args => {
@@ -119,6 +125,60 @@ export class EventsPage implements OnInit {
     this.events = arr
     return arr;
 }
+
+update_status(status,event){
+  event["status"] = status
+  this.firebase.add("events",event.id,event)
+  .then(
+    add_response => {
+      console.log("======== Status Updated ======")
+      console.log(add_response);
+
+  }); 
+}
+
+async setstatus(event){
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Set Event Status',
+      cssClass: 'my-custom-class',
+      buttons: [{
+        text: 'Started',
+        role: 'destructive',
+        icon: 'cloud-outline',
+        handler: () => {
+          console.log('Delete clicked');
+          this.update_status("started",event)
+        }
+      }, {
+        text: 'Inprocess',
+        icon: 'cloud-upload',
+        handler: () => {
+          console.log('Share clicked');
+          this.update_status("inprocess",event)
+        }
+      }, {
+        text: 'Done',
+        icon: 'cloud-done',
+        handler: () => {
+          this.update_status("done",event)
+          console.log('Play clicked');
+        }
+      },
+      {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    console.log(event)
+    await actionSheet.present();
+
+    const { role } = await actionSheet.onDidDismiss();
+    console.log('onDidDismiss resolved with role', role);    
+  }
 
   async delete(event){
     const alert = await this.alertController.create({

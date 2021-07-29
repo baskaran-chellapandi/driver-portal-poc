@@ -25,10 +25,19 @@
               <div class="title"> 
                 {{ event.name | slice:0:6 }}
               </div>
+              <!--For admin actions-->
               <div class="action" *ngIf="admin == true"> 
                 <ion-buttons class="edit-action"  (click) = "gotoedit(event)">  <ion-icon size="small  " name="create"></ion-icon> </ion-buttons>
                   <ion-buttons class="delete-action" (click) = "delete(event)">  <ion-icon size="small  " name="trash"></ion-icon> </ion-buttons>                
-              </div>            
+              </div>  
+
+              <!--For driver actions-->
+              <div class="action" *ngIf="driver == true"> 
+                <ion-buttons class="edit-action"  (click) = "setstatus(event)">  <ion-icon size="small  " name="create"></ion-icon> </ion-buttons>
+              </div>                 
+
+              
+
             </div>              
         </ion-col>
       

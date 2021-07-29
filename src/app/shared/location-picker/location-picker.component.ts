@@ -5,6 +5,7 @@ import { Geolocation, GeolocationPosition } from '@capacitor/geolocation';
 import { Plugins } from "@capacitor/core";
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+import { Platform } from "@ionic/angular";
 
 @Component({
   selector: 'app-location-picker',
@@ -31,7 +32,8 @@ export class LocationPickerComponent implements OnInit {
   constructor(
     private mapService: MapService,
     private androidPermissions: AndroidPermissions,
-    private locationAccuracy: LocationAccuracy
+    private locationAccuracy: LocationAccuracy,
+    private platform: Platform
   ) { 
     this.locationCoords = {
       latitude: "",
@@ -43,7 +45,11 @@ export class LocationPickerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.checkGPSPermission();
+    if (this.platform.is('android') || this.platform.is('ios')) {
+      this.checkGPSPermission();
+    } else {
+      this.getLocationCoordinates();
+    }
   }
 
   async getCurrentPosition() {
@@ -64,6 +70,7 @@ export class LocationPickerComponent implements OnInit {
         }
       },
       err => {
+        this.displayMap();
         alert(err);
       }
     );
@@ -82,6 +89,7 @@ export class LocationPickerComponent implements OnInit {
               this.askToTurnOnGPS();
             },
             error => {
+              this.displayMap();
               //Show alert if user click on 'No Thanks'
               alert('requestPermission Error requesting location permissions ' + error)
             }
@@ -96,7 +104,10 @@ export class LocationPickerComponent implements OnInit {
         // When GPS Turned ON call method to get Accurate location coordinates
         this.getLocationCoordinates()
       },
-      error => alert('Error requesting location permissions ' + JSON.stringify(error))
+      error => {
+        this.displayMap();
+        alert('Error requesting location permissions ' + JSON.stringify(error))
+      }
     );
   }
 
@@ -108,7 +119,7 @@ export class LocationPickerComponent implements OnInit {
       this.displayMap();
     }).catch((error) => {
       this.displayMap();
-      alert('Error getting location, Please Choose manually' + error);
+      alert('Error getting location, Please Choose manually');
     });
   }
 
@@ -121,17 +132,5 @@ export class LocationPickerComponent implements OnInit {
       hash: false
     });
     document.getElementsByClassName('trimblemaps-control-container')[0]['style'].display = 'none';
-  }
-
-  /**
-   * THis method for get user current location
-   */
-  private async locateUser() {
-    this.isLoading = true;
-    const position = await Geolocation.getCurrentPosition();
-    this.mapCenter.lat = position.coords.latitude;
-    this.mapCenter.lon = position.coords.longitude;
-    this.isLoading = false;
-    this.displayMap();
   }
 }

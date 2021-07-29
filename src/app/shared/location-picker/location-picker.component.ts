@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import TrimbleMaps from "@trimblemaps/trimblemaps-js";
 import { MapService } from "../map.service";
 import { Geolocation, GeolocationPosition } from '@capacitor/geolocation';
@@ -6,13 +6,14 @@ import { Plugins } from "@capacitor/core";
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { Platform } from "@ionic/angular";
+// https://developer.trimblemaps.com/maps-sdk/guide/geocoding/
 
 @Component({
   selector: 'app-location-picker',
   templateUrl: './location-picker.component.html',
   styleUrls: ['./location-picker.component.scss']
 })
-export class LocationPickerComponent implements OnInit {
+export class LocationPickerComponent implements OnInit, OnDestroy {
   public selectedLocationImage: string;
   public isLoading = false;
   public apiKey: string = '0D8BA43647605743A5FB4B225664EF0F';
@@ -24,8 +25,8 @@ export class LocationPickerComponent implements OnInit {
   };
   @ViewChild("map", { static: true }) mapElement: ElementRef;
   loc: GeolocationPosition;
-  public map: object;
-  
+  public map: TrimbleMaps.Map;
+
   locationCoords: any;
   timetest: any;
 
@@ -34,7 +35,7 @@ export class LocationPickerComponent implements OnInit {
     private androidPermissions: AndroidPermissions,
     private locationAccuracy: LocationAccuracy,
     private platform: Platform
-  ) { 
+  ) {
     this.locationCoords = {
       latitude: "",
       longitude: "",
@@ -70,8 +71,8 @@ export class LocationPickerComponent implements OnInit {
         }
       },
       err => {
-        this.displayMap();
         alert(err);
+        this.displayMap();
       }
     );
   }
@@ -113,7 +114,7 @@ export class LocationPickerComponent implements OnInit {
 
   // Methos to get device accurate coordinates using device GPS
   getLocationCoordinates() {
-    Geolocation.getCurrentPosition().then((resp) => {
+    Geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((resp) => {
       this.mapCenter.lat = resp.coords.latitude;
       this.mapCenter.lon = resp.coords.longitude;
       this.displayMap();
@@ -129,8 +130,65 @@ export class LocationPickerComponent implements OnInit {
       style: TrimbleMaps.Common.Style[this.mapStyle],
       center: [this.mapCenter.lon, this.mapCenter.lat],
       zoom: this.mapCenter.zoom,
-      hash: false
+      hash: false,
+      pitch: 20,
+      bearing: 20
     });
-    document.getElementsByClassName('trimblemaps-control-container')[0]['style'].display = 'none';
+    this.map.addControl(new TrimbleMaps.NavigationControl());
+    const self: any = this;
+    // OnClick Map
+    this.map.on('click', function (e) {
+      // While choose place Display marker
+      if (self.marker) {
+        self.marker.remove();
+      }
+      self.marker = new TrimbleMaps.Marker()
+      .setLngLat([e.lngLat.lng, e.lngLat.lat])
+      .addTo(self.map);
+    });
+
+    // Get Current location
+    var geolocate = new TrimbleMaps.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true
+      },
+      trackUserLocation: true
+    });
+    this.map.addControl(geolocate);
+
+    geolocate.on('geolocate', function () {
+      console.log('A geolocate event has occurred.')
+    });
+    geolocate.on('error', function () {
+      alert('Error fetching location')
+    });
+
+    // new TrimbleMaps.Popup()
+    //   .setLngLat([this.mapCenter.lon, this.mapCenter.lat])
+    //   .setHTML("<h6>You are Here</h6>")
+    //   .addTo(this.map);
+
+    // For get location using address
+    // var geocodeLocation = TrimbleMaps.Geocoder.geocode({
+    //   address: {
+    //     addr: '1 Independence Way',
+    //     city: 'Princeton',
+    //     state: 'NJ',
+    //     zip: '08540',
+    //     region: TrimbleMaps.Common.Region.NA
+    //   },
+    //   listSize: 1,
+    //   success: function (response) {
+    //     console.log(response);
+    //   },
+    //   failure: function (response) {
+    //     console.log(response);
+    //   }
+    // });
+      document.getElementsByClassName('trimblemaps-canvas')[0]['style'].position = 'relative';
+  }
+
+  ngOnDestroy() {
+    this.map.remove();
   }
 }

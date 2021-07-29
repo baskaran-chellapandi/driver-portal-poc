@@ -11,6 +11,10 @@ export class MapService {
     constructor() { }
 
     initMap(apiKey: string, options: any) {
+        if (!TrimbleMaps.supported()) {
+            alert('Your browser does not support Trimble MAPS JS SDK');
+            return;
+        }
         TrimbleMaps.APIKey = apiKey;
 
         if (options.style) {
@@ -18,8 +22,7 @@ export class MapService {
         }
 
         this.map = new TrimbleMaps.Map(options);
-
-        this.map.addControl(new TrimbleMaps.NavigationControl());
+        this.map.setTrafficVisibility(true);
         return this.map;
     }
 

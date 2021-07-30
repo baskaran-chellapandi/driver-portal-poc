@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="user/dashboard"></ion-back-button>
@@ -8,42 +8,32 @@
       <ion-icon size="large"  name="add"></ion-icon>
     </ion-buttons>      
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+<app-header [title]="'Events'"></app-header>
+
 
 <ion-content>
 
-    <ion-grid>
-      <ion-row dragula="Events" [(dragulaModel)]="events">
-        <!-- iterate each events-->
+  <ion-list>
+    <ion-item>
+      <ion-label>Drag to Re-Order Events</ion-label>
+      <ion-button color="medium" *ngIf="admin == true" (click)="gotoadd()" slot="end">
+        <ion-icon size="medium"  name="add"></ion-icon> Add Event
+      </ion-button>   
+    </ion-item>
+  </ion-list>
 
-        <ion-col size-md="3" push-md="1" class="vamp" *ngFor="let event of events">
-            <div class="image">
-              <img mat-card-image [src]="event.file"/>
-            </div>
-
-            <div class="Desc">
-              <div class="title"> 
-                {{ event.name | slice:0:6 }}
-              </div>
-              <!--For admin actions-->
-              <div class="action" *ngIf="admin == true"> 
-                <ion-buttons class="edit-action"  (click) = "gotoedit(event)">  <ion-icon size="small  " name="create"></ion-icon> </ion-buttons>
-                  <ion-buttons class="delete-action" (click) = "delete(event)">  <ion-icon size="small  " name="trash"></ion-icon> </ion-buttons>                
-              </div>  
-
-              <!--For driver actions-->
-              <div class="action" *ngIf="driver == true"> 
-                <ion-buttons class="edit-action"  (click) = "setstatus(event)">  <ion-icon size="small  " name="create"></ion-icon> </ion-buttons>
-              </div>                 
-
-              
-
-            </div>              
-        </ion-col>
-      
-    
-
-      </ion-row>
-    </ion-grid>
+  <ion-grid >
+    <ion-row class="ion-align-items-center" dragula="Events" class="ion-align-items-center" [(dragulaModel)]="events">
+      <ion-col *ngFor="let event of events" sizeXl="3" sizeMd="6" sizeSm="6" sizeXs="6" routerLink="/events/view/{{events.id}}">
+        <ion-card>
+          <img src="{{event.file}}" />
+          <ion-card-header>
+            <ion-card-title>{{event.name}}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>    
 
 </ion-content>

@@ -16,6 +16,10 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicNativePlugin } from '@ionic-native/core'
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { Base64 } from '@ionic-native/base64/ngx';
+
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,8 +39,9 @@ import { IonicNativePlugin } from '@ionic-native/core'
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-     FirebaseService, AngularFirestore, IonicNativePlugin],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+     FirebaseService, AngularFirestore, IonicNativePlugin,FileChooser,Base64],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

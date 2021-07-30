@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
 import { User } from '../user.model';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { Constants } from 'src/app/constants';
 import { UserService } from '../user.service';
+import { Router } from '@angular/router';
+import { Capacitor } from '@capacitor/core'
+import { Base64 } from '@ionic-native/base64/ngx';
+
 
 @Component({
   selector: 'app-register',
@@ -13,13 +18,22 @@ export class RegisterPage implements OnInit {
   public isLoading : Boolean = false;
   private newUser : User;
   public selectedImage : string;
+  public currentFile : string;
+  public isAndroid : boolean = false;
 
   constructor(
+    private userService : UserService,
     private router : Router,
-    private userService : UserService
+    private fileChooser: FileChooser,
+    private base64: Base64
     ) { }
 
   ngOnInit() {
+      console.log(Capacitor.platform);
+      console.log(Capacitor.getPlatform());
+      if(Capacitor.getPlatform() == "android"){
+        this.isAndroid = true;
+      }
   }
 
   register(form: NgForm) {
@@ -37,18 +51,44 @@ export class RegisterPage implements OnInit {
        role : form.value.role,
        gender : form.value.gender,
     }
+
     if (this.selectedImage) {
       this.newUser.imageUrl = this.selectedImage;
+    } else {
+      this.newUser.imageUrl = Constants.default_events_logo;
     }
-    console.log(this.newUser);
-    
+  
+    if(this.isAndroid && this.currentFile){
+      this.newUser.imageUrl = this.currentFile;
+    } else {
+      this.newUser.imageUrl = Constants.default_events_logo;
+    }
     this.userService.signup(this.newUser)
     .then(
       response => {
         console.log(response);
+          form.reset();
           this.isLoading = false;
           this.router.navigateByUrl('/user/dashboard');
     });
+  }
+
+  openChooser() {
+    console.log('Opening chooser')
+    this.fileChooser.open()
+      .then(uri => {
+      console.log('File chosen: ', uri);
+        this.base64.encodeFile(uri).then((base64File: string) => {
+          console.log(base64File);
+          this.currentFile = base64File;
+        }, (err) => {
+          console.log(err);
+        });
+        //this.currentFile = uri;
+      })
+      .catch(e => {
+        console.log('Error choosing file: ', e);
+      });
   }
 
 

@@ -17,6 +17,7 @@ export class EditPage implements OnInit {
   edit_data: Events;
   response: any;
   edit_event:any;  
+  public locationDetails: any = { lat: '', lng: '', loc: '' };
   constructor(    
     public fb: FormBuilder,
     private actRoute: ActivatedRoute,
@@ -29,7 +30,6 @@ export class EditPage implements OnInit {
     this.EventEditForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(5)]],
       desc: ['', [Validators.required, Validators.minLength(25)]],
-      location: ['', [Validators.required, Validators.minLength(5)]],
       file: [''],
       status: ['', [Validators.required]]
     })
@@ -41,10 +41,20 @@ export class EditPage implements OnInit {
         response["file"] = Constants.default_events_logo
       }
       console.log(response)
+      if (response && response['location'] && response['location'].indexOf(',') !== -1) {
+        this.locationDetails.loc = response['location'];
+        const location = response['location'].split(',');
+        this.locationDetails.lat = Number(location[0]);
+        this.locationDetails.lng = Number(location[1]);
+        delete response['location']
+      }
       this.response = response
       this.EventEditForm.setValue(response)
-
     })      
+  }
+
+  public updateLocation = () => {
+    console.log('Update Location', this.locationDetails)
   }
 
   ngOnDestroy(){
@@ -76,7 +86,8 @@ export class EditPage implements OnInit {
       // this.isSubmitted = false;
       return false;
     } else {
-      this.edit_data = this.EventEditForm.value
+      this.edit_data = this.EventEditForm.value;
+      this.edit_data["location"] = this.locationDetails.loc;
       if(this.event_image)
         this.edit_data["file"] = this.event_image
       

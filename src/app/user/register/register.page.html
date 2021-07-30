@@ -67,7 +67,7 @@
               <ion-label>
                 Profile Pic
               </ion-label>
-                <ion-row>
+                <ion-row  *ngIf="!isAndroid">
                   <ion-col>
                     <ion-input
                       type="file"
@@ -76,6 +76,13 @@
                       #filePicker
                       (change)="onFileChosen($event)"
                     ></ion-input>
+                  </ion-col>
+                </ion-row>
+                <!-- File upload for android-->
+                <ion-row *ngIf="isAndroid">
+                  <ion-col>
+                    <button ion-button secondary (click)="openChooser()" >Open File Chooser</button>
+                    <ion-label *ngIf="currentFile">{{currentFile}}</ion-label>
                   </ion-col>
                 </ion-row>
             </ion-item>

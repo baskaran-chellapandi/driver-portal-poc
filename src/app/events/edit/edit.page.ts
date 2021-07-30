@@ -35,12 +35,12 @@ export class EditPage implements OnInit {
     })
 
     this.edit_event = this.firebase.getOne("events",this.id).valueChanges().subscribe(response => { 
-      console.log("====== Response =========")
+      
       
       if(response && !response["file"]){
         response["file"] = Constants.default_events_logo
       }
-      console.log(response)
+      
       if (response && response['location'] && response['location'].indexOf(',') !== -1) {
         this.locationDetails.loc = response['location'];
         const location = response['location'].split(',');
@@ -49,6 +49,8 @@ export class EditPage implements OnInit {
         delete response['location']
       }
       this.response = response
+      console.log("====== Before Set Value =========")
+      console.log(response)
       this.EventEditForm.setValue(response)
     })      
   }

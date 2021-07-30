@@ -50,7 +50,7 @@ img {
 
 .title {
     display: inline-block;
-    width: 70%;
+    // width: 70%;
     white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -62,10 +62,11 @@ img {
 
 .action {
     display: inline-block;
-    width: 30%;
+    // width: 30%;
 }
 
 .edit-action,
 .delete-action {
     display: inline-block;
+    text-align: center;
 }

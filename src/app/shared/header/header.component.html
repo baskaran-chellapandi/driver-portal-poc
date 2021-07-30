@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar class="mobile-header">
+    <ion-buttons slot="start">
+      <ion-menu-button>
+      </ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar class="web-header">
+    <ion-row class="ion-align-items-center">
+      <ion-col size="1">
+        <img class="ion-align-items-center" src='assets/image/logo.jpg'>
+      </ion-col>
+      <ion-col size="1" class="show-inline ion-text-left">
+        <ion-item lines="none" routerLink='/user/dashboard' button>
+          <ion-label>Dashboard</ion-label>
+        </ion-item>
+        <ion-item lines="none" routerLink='/user/profile' button>
+          <ion-label>Profile</ion-label>
+        </ion-item>
+        <ion-item lines="none" routerLink='/events' button>
+          <ion-label>Events</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-thumbnail slot="end" button (click)="profile($event)">
+      <ion-icon name="person-circle-sharp"></ion-icon>
+      <!-- <img [src]="userDetails.imageUrl ? userDetails.imageUrl : 'assets/image/default-profile.jpg'"> -->
+    </ion-thumbnail>
+  </ion-toolbar>
+</ion-header>

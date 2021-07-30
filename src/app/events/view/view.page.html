@@ -1,11 +1,12 @@
-<ion-header>
+<!-- <ion-header">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>{{event.name}}</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+<app-header [title]="event.name"></app-header>
 <ion-content>
   <ion-grid>
     <ion-row class="ion-align-items-center">

@@ -1,48 +1,44 @@
 <ion-app>
-  <!-- <ion-split-pane contentId="main-content"> -->
-  <ion-menu side="start" menuId="menu1" contentId="main-content" (ionWillOpen)="onMenuOpen()">
-    <ion-content>
-      <ion-list>
-        <ion-list-header>{{userDetails.firstName}} {{userDetails.lastName}}</ion-list-header>
-        <ion-note>{{userDetails.email}}</ion-note>
-
-        <!-- <ion-menu-toggle auto-hide="false" *ngFor="let page of appPages; let i = index">
-          <ion-item routerDirection="root" [routerLink]="[page.url]" lines="none" detail="false" routerLinkActive="selected">
-            <ion-icon slot="start" [ios]="page.icon + '-outline'" [md]="page.icon + '-sharp'"></ion-icon>
-            <ion-label>{{ page.title }}</ion-label>
+  <div class="mobile-header">
+    <ion-menu side="start" menuId="menu1" contentId="main-content" (ionWillOpen)="onMenuOpen()">
+      <ion-content>
+        <ion-list>
+          <ion-item lines="none">
+            <ion-thumbnail slot="start">
+              <img [src]="userDetails.imageUrl ? userDetails.imageUrl : 'assets/image/default-profile.jpg'">
+            </ion-thumbnail>
+            <ion-label>
+              <h3>{{userDetails.firstName}} {{userDetails.lastName}}</h3>
+              <p>{{userDetails.email}}</p>
+            </ion-label>
           </ion-item>
-        </ion-menu-toggle> -->
-
-        <ion-menu-toggle>
-          <ion-item lines="none" routerLink='/user/dashboard'>
-            <ion-icon name="business" slot="start"></ion-icon>
-            <ion-label>Dashboard</ion-label>
-          </ion-item>
-        </ion-menu-toggle>
-
-        <ion-menu-toggle>
-          <ion-item lines="none" routerLink='/user/profile'>
-            <ion-icon name="person-circle-outline" slot="start"></ion-icon>
-            <ion-label>Profile</ion-label>
-          </ion-item>
-        </ion-menu-toggle>
-
-        <ion-menu-toggle>
-          <ion-item lines="none" routerLink='/events'>
-            <ion-icon name="apps" slot="start"></ion-icon>
-            <ion-label>Events</ion-label>
-          </ion-item>
-        </ion-menu-toggle>
-
-        <ion-menu-toggle>
-          <ion-item lines="none" (click)="onLogout()" button>
-            <ion-icon name="exit" slot="start"></ion-icon>
-            <ion-label>Logout</ion-label>
-          </ion-item>
-        </ion-menu-toggle>
-      </ion-list>
-    </ion-content>
-  </ion-menu>
+          <ion-menu-toggle>
+            <ion-item lines="none" routerLink='/user/dashboard'>
+              <ion-icon name="business" slot="start"></ion-icon>
+              <ion-label>Dashboard</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle>
+            <ion-item lines="none" routerLink='/user/profile'>
+              <ion-icon name="person-circle-outline" slot="start"></ion-icon>
+              <ion-label>Profile</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle>
+            <ion-item lines="none" routerLink='/events'>
+              <ion-icon name="apps" slot="start"></ion-icon>
+              <ion-label>Events</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle>
+            <ion-item lines="none" (click)="onLogout()" button>
+              <ion-icon name="exit" slot="start"></ion-icon>
+              <ion-label>Logout</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+  </div>
   <ion-router-outlet id="main-content"></ion-router-outlet>
-  <!-- </ion-split-pane> -->
 </ion-app>

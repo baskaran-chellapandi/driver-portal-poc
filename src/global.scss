@@ -24,3 +24,21 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+@media(min-width: 768px) {
+	.mobile-header {
+		display: none;
+	}
+	.web-header {
+		display: flex;
+	}
+}
+
+@media(max-width: 768px) {
+	.mobile-header {
+		display: block;
+	}
+	.web-header {
+		display: none;
+	}
+}

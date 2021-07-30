@@ -1,0 +1,12 @@
+<ion-content>
+  <ion-item lines="none">
+    <ion-thumbnail slot="start">
+      <img [src]="data.imageUrl ? data.imageUrl : 'assets/image/default-profile.jpg'">
+    </ion-thumbnail>
+    <ion-label>
+      <h3>{{data.firstName}} {{data.lastName}}</h3>
+      <p>{{data.email}}</p>
+    </ion-label>
+  </ion-item>
+  <ion-button expand="block" color="warning" fill="outline" (click)="onLogout()">Logout</ion-button>
+</ion-content>

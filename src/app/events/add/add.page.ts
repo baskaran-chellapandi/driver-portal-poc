@@ -4,6 +4,7 @@ import { Events } from '../../models/event'
 import { FirebaseService } from '../../services/firebase.service'
 import { Router } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-add',
@@ -14,29 +15,28 @@ export class AddPage implements OnInit {
   EventAddForm: FormGroup;
   isSubmitted : Boolean = false;
   event_image:any;
+  public locationDetails: any = { lat: '', lng: '', loc: '' };
   add_data: Events;
   add_event:any;
   get_events:any
   constructor(
     public fb: FormBuilder,
     private router : Router,
-    public firebase: FirebaseService
+    public firebase: FirebaseService,
+    public toastController: ToastController
     ) { }
 
   ngOnInit() {
-
     this.EventAddForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(5)]],
       desc: ['', [Validators.required, Validators.minLength(25)]],
-      location: ['', [Validators.required, Validators.minLength(5)]],
       file: ['', [Validators.required]],
       status: ['', [Validators.required]]
     })
-
   }
 
-  ngOnDestroy(){
-
+  public updateLocation = () => {
+    console.log('Update Location', this.locationDetails)
   }
 
   get errorControl() {
@@ -65,7 +65,7 @@ export class AddPage implements OnInit {
            ;
    }   
 
-  formSubmit(){
+  async formSubmit(){
     this.isSubmitted = true;
     if (!this.EventAddForm.valid) {
       console.log('Please provide all the required values!')
@@ -74,8 +74,17 @@ export class AddPage implements OnInit {
       // this.isSubmitted = false;
       return false;
     } else {
+      if (this.locationDetails.loc === '') {
+        const toast = await this.toastController.create({
+          message: 'Please choose location.',
+          duration: 2000
+        });
+        toast.present();
+        return;
+      }
       this.add_data = this.EventAddForm.value
       this.add_data["file"] = this.event_image
+      this.add_data["location"] = this.locationDetails.loc;
       var slug = this.convertToSlug(this.add_data["name"])
       // delete this.add_data["file"]
       this.get_events = this.firebase.getOne("events",slug).valueChanges().subscribe(response => { 

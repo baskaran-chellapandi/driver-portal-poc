@@ -43,15 +43,7 @@
       <!--Event Location-->
       <ion-item>
         <ion-label position="floating">Location</ion-label>
-        <ion-input formControlName="location" type="text" required>
-        </ion-input>
-
-        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.location.errors?.required">
-          Location is required.
-        </span>
-        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.location.errors?.minlength">
-          Location should be min 5 chars long.
-        </span>            
+        <app-location-picker [locationDetails]="locationDetails" (updateLocation)="updateLocation()" [isFrom]="'EDIT_EVENT'" style="margin-top: 15px;"></app-location-picker>          
       </ion-item>
 
       <!--Event Image -->

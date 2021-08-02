@@ -42,6 +42,7 @@ export class EventsPage implements OnInit {
 
     this.dragulaService.dropModel("Events").subscribe(args => {
       this.process_order(args)
+      return false
     });
 
   }

@@ -7,6 +7,7 @@ import { UserService } from '../user.service';
 import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core'
 import { Base64 } from '@ionic-native/base64/ngx';
+import { FilePath } from '@ionic-native/file-path/ngx';
 
 
 @Component({
@@ -25,7 +26,8 @@ export class RegisterPage implements OnInit {
     private userService : UserService,
     private router : Router,
     private fileChooser: FileChooser,
-    private base64: Base64
+    private base64: Base64,
+    private filePath : FilePath
     ) { }
 
   ngOnInit() {
@@ -34,6 +36,7 @@ export class RegisterPage implements OnInit {
       if(Capacitor.getPlatform() == "android"){
         this.isAndroid = true;
       }
+     
   }
 
   register(form: NgForm) {
@@ -71,26 +74,39 @@ export class RegisterPage implements OnInit {
           this.isLoading = false;
           this.router.navigateByUrl('/user/dashboard');
     });
+
   }
+  
 
   openChooser() {
     console.log('Opening chooser')
-    this.fileChooser.open()
-      .then(uri => {
-      console.log('File chosen: ', uri);
-        this.base64.encodeFile(uri).then((base64File: string) => {
-          console.log(base64File);
-          this.currentFile = base64File;
-        }, (err) => {
-          console.log(err);
-        });
-        //this.currentFile = uri;
+    this.fileChooser.open().then(uri => {
+      alert('uri'+JSON.stringify(uri));
+          // get file path
+      this.filePath.resolveNativePath(uri)
+      .then(file => {
+        alert('file'+JSON.stringify(file));
+        // let  image;
+        // image = file.substr(file.lastIndexOf('/') + 1);
+        // console.log(image);
+        console.log(file);
+        if (file) {
+         // convert your file in base64 format
+          this.base64.encodeFile(file)
+            .then((base64File: string) => {
+              this.currentFile  = base64File;
+            alert('base64File'+ JSON.stringify(base64File));
+            }, (err) => {
+              console.log("errrrrrrrrrrrrrrrrrrrrrrrr");
+              console.log(err);
+              alert('err'+JSON.stringify(err));
+            });
+        }
       })
-      .catch(e => {
-        console.log('Error choosing file: ', e);
-      });
+      .catch(err => console.log(err));
+    })
+    .catch(e => alert('uri'+JSON.stringify(e)));
   }
-
 
    onFileChosen(event: Event){
     const pickedFile = (event.target as HTMLInputElement).files[0];

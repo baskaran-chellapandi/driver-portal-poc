@@ -18,6 +18,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicNativePlugin } from '@ionic-native/core'
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
+import { FilePath } from '@ionic-native/file-path/ngx';
+
 
 
 
@@ -41,7 +43,7 @@ import { Base64 } from '@ionic-native/base64/ngx';
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-     FirebaseService, AngularFirestore, IonicNativePlugin,FileChooser,Base64],
+     FirebaseService, AngularFirestore, IonicNativePlugin,FileChooser,Base64,FilePath],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

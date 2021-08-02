@@ -183,16 +183,19 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
             self.marker = new TrimbleMaps.Marker()
               .setLngLat([self.locationDetails.lng, self.locationDetails.lat])
               .addTo(self.map);
-            new TrimbleMaps.Popup()
-              .setLngLat([self.locationDetails.lng, self.locationDetails.lat])
-              .setHTML("<h6>Choosed Location</h6>")
-              .addTo(this.map);
+            // new TrimbleMaps.Popup()
+            //   .setLngLat([self.locationDetails.lng, self.locationDetails.lat])
+            //   .setHTML("<h6>Choosed Location</h6>")
+            //   .addTo(this.map);
           }
         }
       });
 
       // OnClick Map
       this.map.on('click', function (e) {
+        if (self.isFrom === 'VIEW_EVENT' || self.isFrom === 'DASHBOARD') {
+          return;
+        }
         if (self.marker) {
           self.marker.remove();
         }

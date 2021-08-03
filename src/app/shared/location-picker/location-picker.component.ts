@@ -172,6 +172,7 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
 
       /** On Map loading */
       this.map.on('load', function () {
+        self.map.scrollZoom.disable();
         if (self.isFrom === 'ADD_EVENT' || self.isFrom === 'DASHBOARD') {
           geolocate.trigger();
         } else {

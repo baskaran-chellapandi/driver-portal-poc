@@ -1,14 +1,16 @@
-<ion-header>
+<!--<ion-header>
   
 
 
-  <ion-toolbar>
+   <ion-toolbar>
   <ion-buttons slot="start">
     <ion-back-button defaultHref="user/dashboard"></ion-back-button>
   </ion-buttons>
     <ion-title>Event Add</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+
+<app-header [title]="'Add Event'"></app-header>
 
 <ion-content>
 
@@ -53,6 +55,7 @@
       <!--Event Image -->
       <ion-item>
         <!--<ion-label position="floating">Image</ion-label> -->
+        
         <ion-input formControlName="file" type="file" (change)="on_select_file($event)" required>
         </ion-input>
         <span class="error ion-padding" *ngIf="isSubmitted && errorControl.file.errors?.required">

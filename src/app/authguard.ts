@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Platform } from '@ionic/angular';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { StorageService } from '../app/services/storage.service';
 
@@ -6,7 +7,7 @@ import { StorageService } from '../app/services/storage.service';
     providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-    constructor(private router: Router, private storage: StorageService) { }
+    constructor(private router: Router, private storage: StorageService, private platform: Platform) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         this.storage.get("token").then(email => {
@@ -19,13 +20,17 @@ export class AuthGuard implements CanActivate {
                 }
             } else {
                 // not logged in so redirect to splash or login page based on storage
-                this.storage.get('disableSpalshScreen').then((disableSpalshScreen) => {
-                    if (disableSpalshScreen) {
-                        this.router.navigateByUrl('/user/login');
-                    } else {
-                        this.router.navigateByUrl('/');
-                    }
-                });
+                if (this.platform.is('desktop') == false) {
+                    this.storage.get('disableSpalshScreen').then((disableSpalshScreen) => {
+                        if (disableSpalshScreen) {
+                            this.router.navigateByUrl('/user/login');
+                        } else {
+                            this.router.navigateByUrl('/');
+                        }
+                    });
+                } else {
+                    this.router.navigateByUrl('/user/login');
+                }
             }
         });
         return true;

@@ -21,7 +21,13 @@ const routes: Routes = [
     path: 'events',
     loadChildren: () => import('./events/events.module').then( m => m.EventsPageModule),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'settings',
+    loadChildren: () => import('./location-details/location-details.module').then( m => m.LocationDetailsPageModule),
+    canActivate: [AuthGuard]
   }
+
 ];
 
 @NgModule({

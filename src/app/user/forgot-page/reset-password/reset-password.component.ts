@@ -10,9 +10,9 @@ import { ToastController } from '@ionic/angular';
   styleUrls: ['./reset-password.component.scss'],
 })
 export class ResetPasswordComponent implements OnInit {
-  public isLoading: Boolean = false;
-  public errMessage: String = '';
-  public isPassWordChanged: Boolean = false;
+  public isLoading = false;
+  public errMessage = '';
+  public isPassWordChanged = false;
   constructor(public userService: UserService, private router: Router, public toastController: ToastController) { }
 
   ngOnInit() {
@@ -43,7 +43,7 @@ export class ResetPasswordComponent implements OnInit {
       this.errMessage = 'Token Expired, Please Try again';
       this.isLoading = false;
     });
-  }
+  };
 
   /**
    * This method for render alert popup

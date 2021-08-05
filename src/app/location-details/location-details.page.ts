@@ -30,17 +30,19 @@ export class LocationDetailsPage implements OnInit {
 
   ngOnInit() {
     this.locatoinDetails = this.fb.group({
-      street: ['', [Validators.required, Validators.minLength(5)]],
+      addr: ['', [Validators.required, Validators.minLength(5)]],
       city: ['', [Validators.required, Validators.minLength(5)]],
       state: ['', [Validators.required, Validators.minLength(2)]],
       zip: ['', [Validators.required, Validators.minLength(4)]],
       region: ['', [Validators.required]]
     });
-    this.firebase.getOne('User', this.email).valueChanges().subscribe(response => {
+    this.userService.getUserData().then(response => {
       this.userData = response || {};
       if (!this.userData || !this.userData.address) {
         this.locatoinDetails.setValue(this.userService.defaultLocation);
         this.userData.address = this.userService.defaultLocation;
+      } else {
+        this.locatoinDetails.setValue(this.userData.address);
       }
     });
   }
@@ -55,7 +57,7 @@ export class LocationDetailsPage implements OnInit {
       address: self.userData.address,
       listSize: 1,
       success: ((response: any) => {
-        if (response && response[0].Errors && response[0].Errors[0].Description) {
+        if (response && response[0].Errors && response[0].Errors[0] && response[0].Errors[0].Description) {
           self.presentToast(response[0].Errors[0].Description);
         } else {
           self.updateAddress();
@@ -68,7 +70,12 @@ export class LocationDetailsPage implements OnInit {
   }
 
   public updateAddress = () => {
-    
+    this.userService.updatePassword(this.userData)
+    .then(results => {
+      this.presentToast('Default location details updated successfully');
+    }).catch((err) => {
+      this.presentToast('Something went wrong, please try after some time');
+    });
   };
 
   async presentToast(content?) {

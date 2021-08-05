@@ -9,7 +9,7 @@ import { StorageService } from '../services/storage.service';
 })
 export class UserService {
   public defaultLocation: any = {
-    street: '1 Independence Way',
+    addr: '1 Independence Way',
     city: 'Princeton',
     state: 'NJ',
     zip: '08540',

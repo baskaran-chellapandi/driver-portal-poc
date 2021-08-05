@@ -8,12 +8,12 @@
           <!--Street Name-->
           <ion-item>
             <ion-label position="floating">Street</ion-label>
-            <ion-input formControlName="street" type="text" required></ion-input>
+            <ion-input formControlName="addr" type="text" required></ion-input>
 
-            <span class="error ion-padding" *ngIf="isSubmitted && errorControl.street.errors?.required">
+            <span class="error ion-padding" *ngIf="isSubmitted && errorControl.addr.errors?.required">
               street name is required.
             </span>
-            <span class="error ion-padding" *ngIf="isSubmitted && errorControl.street.errors?.minlength">
+            <span class="error ion-padding" *ngIf="isSubmitted && errorControl.addr.errors?.minlength">
               street Name should be min 5 chars long.
             </span>
           </ion-item>

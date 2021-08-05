@@ -5,6 +5,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { Platform } from '@ionic/angular';
+import { UserService } from 'src/app/user/user.service';
 
 @Component({
   selector: 'app-location-picker',
@@ -21,6 +22,7 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
   public apiKey = '0D8BA43647605743A5FB4B225664EF0F';
   public mapStyle = 'TRANSPORTATION';
   public map: TrimbleMaps.Map;
+  public userData: any;
   public mapCenter = {
     lon: -95,
     lat: 38,
@@ -30,17 +32,24 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
     private mapService: MapService,
     private androidPermissions: AndroidPermissions,
     private locationAccuracy: LocationAccuracy,
-    private platform: Platform
+    private platform: Platform,
+    private userService: UserService
   ) {
 
   }
 
   ngOnInit() {
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.checkGPSPermission();
-    } else {
-      this.getLocationCoordinates();
-    }
+    this.userService.getUserData().then(response => {
+      this.userData = response || {};
+      if (!this.userData || !this.userData.address) {
+        this.userData.address = this.userService.defaultLocation;
+      }
+      if (this.platform.is('android') || this.platform.is('ios')) {
+        this.checkGPSPermission();
+      } else {
+        this.getLocationCoordinates();
+      }
+    });
   }
 
   // Check if application having GPS access permission
@@ -56,10 +65,7 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
         }
       },
       err => {
-        if (this.platform.is('android') || this.platform.is('ios')) {
-          alert(err);
-        }
-        this.displayMap();
+        this.displayMap(true);
       }
     );
   }
@@ -77,7 +83,7 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
               this.askToTurnOnGPS();
             },
             error => {
-              this.displayMap();
+              this.displayMap(true);
               //Show alert if user click on 'No Thanks'
               alert('requestPermission Error requesting location permissions ' + error);
             }
@@ -93,7 +99,7 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
         this.getLocationCoordinates();
       },
       error => {
-        this.displayMap();
+        this.displayMap(true);
         alert('Error requesting location permissions ' + JSON.stringify(error));
       }
     );
@@ -106,97 +112,123 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
       this.mapCenter.lon = resp.coords.longitude;
       this.displayMap();
     }).catch((error) => {
-      this.displayMap();
+      this.displayMap(true);
       alert('Error getting location, Please Choose manually');
     });
   }
 
-  public displayMap() {
+  public displayMap(hasAccessLocation?) {
     setTimeout(() => {
-      if ((this.isFrom === 'VIEW_EVENT' || this.isFrom === 'EDIT_EVENT') && this.locationDetails) {
-        this.mapCenter.lon = this.locationDetails.lng;
-        this.mapCenter.lat = this.locationDetails.lat;
+      if (hasAccessLocation && (this.isFrom === 'DASHBOARD' || this.isFrom === 'ADD_EVENT')) {
+        TrimbleMaps.APIKey = '0D8BA43647605743A5FB4B225664EF0F';
+        this.userData.address.region = TrimbleMaps.Common.Region.NA;
+        TrimbleMaps.Geocoder.geocode({
+          address: this.userData.address,
+          listSize: 1,
+          success: ((response: any) => {
+            if (response && response[0].Errors && response[0].Errors[0] && response[0].Errors[0].Description) {
+              console.log(response[0].Errors[0]);
+            } else {
+              this.mapCenter.lon = response[0].Coords.Lon;
+              this.mapCenter.lat = response[0].Coords.Lat;
+              this.renderingMapWithConFig(hasAccessLocation);
+            }
+          }),
+          failure: ((error: any) => {
+            console.log(error);
+          })
+        });
+      } else {
+        this.renderingMapWithConFig(hasAccessLocation);
       }
-      /** Init Trimble Map */
-      this.map = this.mapService.initMap(this.apiKey, {
-        container: this.mapElement.nativeElement,
-        style: TrimbleMaps.Common.Style[this.mapStyle],
-        center: [this.mapCenter.lon, this.mapCenter.lat],
-        zoom: this.mapCenter.zoom,
-        hash: false
-      });
-      const self: any = this;
-
-      /** Controls Start */
-      this.map.addControl(new TrimbleMaps.NavigationControl());
-      this.map.addControl(new TrimbleMaps.FullscreenControl());
-
-      // Get Current location using geolocate
-      const geolocate = new TrimbleMaps.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true
-        },
-        trackUserLocation: true
-      });
-      this.map.addControl(geolocate);
-      /** Controls End */
-
-
-      geolocate.on('geolocate', () => {
-        console.log('A geolocate event has occurred.');
-      });
-      geolocate.on('error', () => {
-        alert('Error fetching location');
-      });
-
-
-      /** On Map loading */
-      this.map.on('load', () => {
-        self.map.scrollZoom.disable();
-        if (self.isFrom === 'ADD_EVENT' || self.isFrom === 'DASHBOARD') {
-          geolocate.trigger();
-        } else {
-          if (self.isFrom === 'EDIT_EVENT') {
-            self.marker = new TrimbleMaps.Marker()
-              .setLngLat([self.locationDetails.lng, self.locationDetails.lat])
-              .addTo(self.map);
-          } else if (self.isFrom === 'VIEW_EVENT') {
-            self.marker = new TrimbleMaps.Marker()
-              .setLngLat([self.locationDetails.lng, self.locationDetails.lat])
-              .addTo(self.map);
-            // new TrimbleMaps.Popup()
-            //   .setLngLat([self.locationDetails.lng, self.locationDetails.lat])
-            //   .setHTML("<h6>Choosed Location</h6>")
-            //   .addTo(this.map);
-          }
-        }
-      });
-
-      // OnClick Map
-      this.map.on('click', (e) => {
-        if (self.isFrom === 'VIEW_EVENT' || self.isFrom === 'DASHBOARD') {
-          return;
-        }
-        if (self.marker) {
-          self.marker.remove();
-        }
-        // While choose place Display marker
-        self.marker = new TrimbleMaps.Marker()
-          .setLngLat([e.lngLat.lng, e.lngLat.lat])
-          .addTo(self.map);
-        // Update Location Details
-        if (self.updateLocation) {
-          self.locationDetails.lat = e.lngLat.lat;
-          self.locationDetails.lng = e.lngLat.lng;
-          self.locationDetails.loc = e.lngLat.lat + ',' + e.lngLat.lng;
-          self.updateLocation.emit();
-        }
-      });
-
-      const trimbleDom: any = document.getElementsByClassName('trimblemaps-canvas');
-      trimbleDom[trimbleDom.length - 1].style.position = 'relative';
     }, 1800);
   }
+
+  public renderingMapWithConFig = (hasAccessLocation?) => {
+    if ((this.isFrom === 'VIEW_EVENT' || this.isFrom === 'EDIT_EVENT') && this.locationDetails) {
+      this.mapCenter.lon = this.locationDetails.lng;
+      this.mapCenter.lat = this.locationDetails.lat;
+    }
+    /** Init Trimble Map */
+    this.map = this.mapService.initMap(this.apiKey, {
+      container: this.mapElement.nativeElement,
+      style: TrimbleMaps.Common.Style[this.mapStyle],
+      center: [this.mapCenter.lon, this.mapCenter.lat],
+      zoom: this.mapCenter.zoom,
+      hash: false
+    });
+    const self: any = this;
+
+    /** Controls Start */
+    this.map.addControl(new TrimbleMaps.NavigationControl());
+    this.map.addControl(new TrimbleMaps.FullscreenControl());
+
+    // Get Current location using geolocate
+    const geolocate = new TrimbleMaps.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true
+      },
+      trackUserLocation: true
+    });
+    this.map.addControl(geolocate);
+    /** Controls End */
+
+
+    geolocate.on('geolocate', () => {
+      console.log('A geolocate event has occurred.');
+    });
+    geolocate.on('error', () => {
+      alert('Error fetching location');
+    });
+
+    /** On Map loading */
+    this.map.on('load', () => {
+      self.map.scrollZoom.disable();
+      if ((self.isFrom === 'ADD_EVENT' || self.isFrom === 'DASHBOARD')) {
+        if (hasAccessLocation) {
+          self.marker = new TrimbleMaps.Marker()
+            .setLngLat([self.mapCenter.lon, self.mapCenter.lat])
+            .addTo(self.map);
+        } else {
+          geolocate.trigger();
+        }
+      } else {
+        if (self.isFrom === 'EDIT_EVENT') {
+          self.marker = new TrimbleMaps.Marker()
+            .setLngLat([self.locationDetails.lng, self.locationDetails.lat])
+            .addTo(self.map);
+        } else if (self.isFrom === 'VIEW_EVENT') {
+          self.marker = new TrimbleMaps.Marker()
+            .setLngLat([self.locationDetails.lng, self.locationDetails.lat])
+            .addTo(self.map);
+        }
+      }
+    });
+
+    // OnClick Map
+    this.map.on('click', (e) => {
+      if (self.isFrom === 'VIEW_EVENT' || self.isFrom === 'DASHBOARD') {
+        return;
+      }
+      if (self.marker) {
+        self.marker.remove();
+      }
+      // While choose place Display marker
+      self.marker = new TrimbleMaps.Marker()
+        .setLngLat([e.lngLat.lng, e.lngLat.lat])
+        .addTo(self.map);
+      // Update Location Details
+      if (self.updateLocation) {
+        self.locationDetails.lat = e.lngLat.lat;
+        self.locationDetails.lng = e.lngLat.lng;
+        self.locationDetails.loc = e.lngLat.lat + ',' + e.lngLat.lng;
+        self.updateLocation.emit();
+      }
+    });
+
+    const trimbleDom: any = document.getElementsByClassName('trimblemaps-canvas');
+    trimbleDom[trimbleDom.length - 1].style.position = 'relative';
+  };
 
   ngOnDestroy() {
     this.map.remove();
